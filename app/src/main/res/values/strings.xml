@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Vulpes</string>
     <string name="detailsBtn">Детали</string>
+    <string name="InviteBtn">Пригласить друга</string>
+
     <string name="mainActivityTitle">Список фильмов</string>
     <string name="sweeneyToddFilm">Суини Тодд, демон-парикмахер с Флит-стрит</string>
     <string name="harryPotterFilm">Гарри Поттер и философский камень</string>
     <string name="dogsPurposeFilm">Собачья жизнь</string>
-
 </resources>
