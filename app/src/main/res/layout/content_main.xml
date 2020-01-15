@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".activity.MainActivity"
     tools:showIn="@layout/activity_main">
 
 
@@ -71,14 +71,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <Button
-                        android:id="@+id/button"
+                        android:id="@+id/harryPotter1DetailsBtn"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="37dp"
+                        android:onClick="onDetailsBtnClick"
                         style="@style/DetailsBtn" />
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/sweeneyToddDetailsBtn"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="37dp"
+                        android:onClick="onDetailsBtnClick"
                         style="@style/DetailsBtn" />
                 </LinearLayout>
 
@@ -124,9 +126,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <Button
-                        android:id="@+id/button3"
+                        android:id="@+id/dogsPurposeDetailsBtn"
                         style="@style/DetailsBtn"
                         android:layout_marginHorizontal="37dp"
+                        android:onClick="onDetailsBtnClick"
                         android:layout_weight="1"/>
                     <Button
                         android:id="@+id/button4"
