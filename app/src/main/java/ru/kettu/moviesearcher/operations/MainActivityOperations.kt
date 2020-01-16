@@ -1,12 +1,8 @@
 package ru.kettu.moviesearcher.operations
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.MainActivity
-
 
 
 fun TextView.setTextViewColor(bundle: Bundle, id: String) {

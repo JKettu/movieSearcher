@@ -3,7 +3,6 @@ package ru.kettu.moviesearcher.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -53,9 +52,6 @@ class MainActivity : AppCompatActivity() {
         outState.putInt(DOGS_PURPOSE, dogsPurpose.currentTextColor)
         outState.putInt(HARRY_POTTER_1, harryPotter1.currentTextColor)
         outState.putInt(SWEENEY_TODD, sweeneyTodd.currentTextColor)
-        Log.d("color: ", "$DOGS_PURPOSE ${dogsPurpose.currentTextColor}")
-        Log.d("color: ", "$HARRY_POTTER_1 ${harryPotter1.currentTextColor}")
-        Log.d("color: ", "$SWEENEY_TODD ${sweeneyTodd.currentTextColor}")
     }
 
     fun onDetailsBtnClick(view: View?){
