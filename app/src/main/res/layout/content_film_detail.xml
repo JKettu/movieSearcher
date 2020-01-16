@@ -1,50 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true"
     android:orientation="vertical"
     tools:context=".activity.FilmDetailActivity"
-    tools:showIn="@layout/activity_film_detail"
-    android:padding="10dp"
-    android:fillViewport="true">
+    tools:showIn="@layout/activity_film_detail">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@color/colorPrimaryLight"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
-            android:layout_weight="2">
-            <ImageView
-                android:id="@+id/filmImg"
-                android:layout_marginStart="10dp"
-                android:layout_width="wrap_content"
-                android:scaleType="centerInside"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="fill_vertical" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
+                android:layout_marginTop="10dp"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/filmImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill_vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:scaleType="centerInside" />
+
+                <CheckBox
+                    android:id="@+id/likeCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/like"
+                    android:textColor="@color/colorAccent" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/filmDesc"
                 style="@style/descriptionStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity=""
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:gravity=""
-                android:layout_gravity=""
-                android:justificationMode="inter_word"/>
+                android:justificationMode="inter_word" />
         </LinearLayout>
-    </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/comment" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="5dp"
+            android:alpha="0.5"
+            android:background="@android:color/white"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:focusedByDefault="false"/>
+    </LinearLayout>
 </ScrollView>
