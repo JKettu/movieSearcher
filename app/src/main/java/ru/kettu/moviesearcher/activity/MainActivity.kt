@@ -1,6 +1,5 @@
 package ru.kettu.moviesearcher.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.os.Bundle
@@ -11,86 +10,75 @@ import androidx.appcompat.app.AppCompatActivity
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.models.FilmDetailsInfo
 import ru.kettu.moviesearcher.operations.setDefaultTextColor
-import ru.kettu.moviesearcher.operations.setTextViewColor
 
 class MainActivity : AppCompatActivity() {
 
-    private val films: MutableMap<String, Int> = hashMapOf(
-        DOGS_PURPOSE to R.id.dogsPurposeText,
-        HARRY_POTTER_1 to R.id.harryPotterText,
-        SWEENEY_TODD to R.id.sweeneyToddText
-    )
+    private var selectedFilmNameId: Int = 0
 
     companion object {
-        //Films
-        const val DOGS_PURPOSE = "DOGS_PURPOSE"
-        const val HARRY_POTTER_1 = "HARRY_POTTER_1"
-        const val SWEENEY_TODD = "SWEENEY_TODD"
-
+        const val SELECTED_FILM_COLOR = "SELECTED_FILM_COLOR"
 
         const val DETAILS = "DETAILS"
     }
 
-    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (savedInstanceState == null) return
 
-        films.forEach { film ->
-            run {
-                val currentFilm = findViewById<TextView>(film.value)
-                currentFilm.setTextViewColor(savedInstanceState, film.key)
-            }
+        if (savedInstanceState != null) {
+            val selectedTextColor = savedInstanceState.getInt(SELECTED_FILM_COLOR)
+            if (selectedTextColor == 0 || selectedFilmNameId == 0) return
+            val selectedText = findViewById<TextView>(selectedFilmNameId)
+            selectedText.setTextColor(selectedTextColor)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val dogsPurpose = findViewById<TextView>(R.id.dogsPurposeText)
-        val harryPotter1 = findViewById<TextView>(R.id.harryPotterText)
-        val sweeneyTodd = findViewById<TextView>(R.id.sweeneyToddText)
-        outState.putInt(DOGS_PURPOSE, dogsPurpose.currentTextColor)
-        outState.putInt(HARRY_POTTER_1, harryPotter1.currentTextColor)
-        outState.putInt(SWEENEY_TODD, sweeneyTodd.currentTextColor)
+        if (selectedFilmNameId == 0) return
+        val selectedFilm = findViewById<TextView>(selectedFilmNameId)
+        outState.putInt(SELECTED_FILM_COLOR, selectedFilm.currentTextColor)
     }
 
     fun onDetailsBtnClick(view: View?){
         if (view == null || view !is Button) return
         val intent = Intent(this@MainActivity, FilmDetailActivity::class.java)
         var colorAccentDark = resources.getColor(R.color.colorAccentDark)
+        if (selectedFilmNameId != 0) {
+            val selectedText = findViewById<TextView>(selectedFilmNameId)
+            selectedText.setDefaultTextColor()
+        }
         when(view.id) {
             R.id.dogsPurposeDetailsBtn -> {
                 val text = findViewById<TextView>(R.id.dogsPurposeText)
-                films.forEach{film ->
-                    val currentFilm = findViewById<TextView>(film.value)
-                    currentFilm.setDefaultTextColor()
-                }
                 text.setTextColor(colorAccentDark)
+                selectedFilmNameId = R.id.dogsPurposeText
 
-                intent.putExtra(DETAILS, FilmDetailsInfo(R.string.dogsPurposeDesc, R.drawable.dogspurpose))
+                intent.putExtra(DETAILS, FilmDetailsInfo(R.string.dogsPurposeDesc, R.drawable.dogs_purpose))
                 startActivity(intent)
             }
             R.id.harryPotter1DetailsBtn -> {
                 val text = findViewById<TextView>(R.id.harryPotterText)
-                films.forEach{film ->
-                    val currentFilm = findViewById<TextView>(film.value)
-                    currentFilm.setDefaultTextColor()
-                }
                 text.setTextColor(colorAccentDark)
+                selectedFilmNameId = R.id.harryPotterText
 
-                intent.putExtra(DETAILS, FilmDetailsInfo(R.string.harryPotterDesc, R.drawable.harrypotter))
+                intent.putExtra(DETAILS, FilmDetailsInfo(R.string.harryPotterDesc, R.drawable.harry_potter_1))
                 startActivity(intent)
             }
             R.id.sweeneyToddDetailsBtn -> {
                 val text = findViewById<TextView>(R.id.sweeneyToddText)
-                films.forEach{film ->
-                    val currentFilm = findViewById<TextView>(film.value)
-                    currentFilm.setDefaultTextColor()
-                }
                 text.setTextColor(colorAccentDark)
+                selectedFilmNameId = R.id.sweeneyToddText
 
-                intent.putExtra(DETAILS, FilmDetailsInfo(R.string.sweeneyToddDesc, R.drawable.sweeneytodd))
+                intent.putExtra(DETAILS, FilmDetailsInfo(R.string.sweeneyToddDesc, R.drawable.sweeney_todd))
+                startActivity(intent)
+            }
+            R.id.ageOfAdalineDetailsBtn -> {
+                val text = findViewById<TextView>(R.id.ageOfAdalineText)
+                text.setTextColor(colorAccentDark)
+                selectedFilmNameId = R.id.ageOfAdalineText
+
+                intent.putExtra(DETAILS, FilmDetailsInfo(R.string.ageOfAdalineDesc, R.drawable.age_of_adaline))
                 startActivity(intent)
             }
         }
