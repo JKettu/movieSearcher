@@ -2,6 +2,7 @@ package ru.kettu.moviesearcher.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.Intent.ACTION_SEND
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -92,6 +93,17 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra(DETAILS, FilmDetailsInfo(R.string.sweeneyToddDesc, R.drawable.sweeneytodd))
                 startActivity(intent)
             }
+        }
+    }
+    
+    fun onInviteBtnClick(view: View?) {
+        if (view == null || view !is Button) return
+        val intent = Intent(ACTION_SEND)
+        intent.type = "text/plain"
+        val title = resources.getString(R.string.chooser)
+        val chooser = Intent.createChooser(intent, title)
+        intent.resolveActivity(packageManager)?.let {
+            startActivity(chooser)
         }
     }
 }

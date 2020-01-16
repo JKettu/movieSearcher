@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Vulpes</string>
     <string name="detailsBtn">Детали</string>
-    <string name="InviteBtn">Пригласить друга</string>
+    <string name="inviteBtn">Пригласить друга</string>
+    <string name="chooser">Пригласить через...</string>
 
     <string name="mainActivityTitle">Список фильмов</string>
     <string name="sweeneyToddFilm">Суини Тодд, демон-парикмахер с Флит-стрит</string>
