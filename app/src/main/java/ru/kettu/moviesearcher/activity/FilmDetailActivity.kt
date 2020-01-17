@@ -1,14 +1,24 @@
 package ru.kettu.moviesearcher.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.content_film_detail.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.MainActivity.Companion.DETAILS
+import ru.kettu.moviesearcher.activity.MainActivity.Companion.FILM_INFO
 import ru.kettu.moviesearcher.models.FilmDetailsInfo
+import ru.kettu.moviesearcher.models.FilmInfo
 
 class FilmDetailActivity : AppCompatActivity() {
+
+    companion object {
+        const val DETAILS_INFO = "DETAILS_INFO"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +30,7 @@ class FilmDetailActivity : AppCompatActivity() {
             text.setText(R.string.couldntFindDesc)
             return
         }
-        val details = intentExtras.getParcelable<FilmDetailsInfo>(DETAILS)
+        val details = intentExtras.getParcelable<FilmInfo>(FILM_INFO)
         if (details == null) {
             text.setText(R.string.couldntFindDesc)
             return
@@ -28,5 +38,14 @@ class FilmDetailActivity : AppCompatActivity() {
 
         img.setImageResource(details.filmPosterId)
         text.setText(details.filmDescriptionId)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val intent = Intent()
+        val likeCheckBox = findViewById<CheckBox>(R.id.likeCheckBox)
+        val commentText = findViewById<EditText>(R.id.comment)
+        intent.putExtra(DETAILS_INFO, FilmDetailsInfo(likeCheckBox.isChecked, if (commentText.text == null) "" else commentText.text.toString()))
+        setResult(Activity.RESULT_OK, intent)
     }
 }

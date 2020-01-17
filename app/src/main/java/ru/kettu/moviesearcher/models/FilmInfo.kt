@@ -4,7 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class FilmDetailsInfo (val isLiked: Boolean, val comment: String)
+data class FilmInfo (val filmDescriptionId: Int, val filmPosterId: Int)
     : Parcelable {
-
 }
