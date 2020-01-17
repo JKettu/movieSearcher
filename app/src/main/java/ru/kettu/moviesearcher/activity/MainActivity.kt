@@ -45,24 +45,20 @@ class MainActivity : AppCompatActivity() {
 
     fun onDetailsBtnClick(view: View?){
         if (view == null || view !is Button) return
-        val intent = Intent(this@MainActivity, FilmDetailActivity::class.java)
+
         if (selectedFilmNameId != 0) {
             val selectedText = findViewById<TextView>(selectedFilmNameId)
             selectedText.setDefaultTextColor()
         }
         when(view.id) {
-            R.id.dogsPurposeDetailsBtn ->{
-                openFilmDescriptionActivity(intent, R.id.dogsPurposeText, R.string.dogsPurposeDesc, R.drawable.dogs_purpose)
-            }
-            R.id.harryPotter1DetailsBtn -> {
-                openFilmDescriptionActivity(intent, R.id.harryPotterText, R.string.harryPotterDesc, R.drawable.harry_potter_1)
-            }
-            R.id.sweeneyToddDetailsBtn -> {
-                openFilmDescriptionActivity(intent, R.id.sweeneyToddText, R.string.sweeneyToddDesc, R.drawable.sweeney_todd)
-            }
-            R.id.ageOfAdalineDetailsBtn -> {
-                openFilmDescriptionActivity(intent, R.id.ageOfAdalineText, R.string.ageOfAdalineDesc, R.drawable.age_of_adaline)
-            }
+            R.id.dogsPurposeDetailsBtn ->
+                openFilmDescriptionActivity(R.id.dogsPurposeText, R.string.dogsPurposeDesc, R.drawable.dogs_purpose)
+            R.id.harryPotter1DetailsBtn ->
+                openFilmDescriptionActivity(R.id.harryPotterText, R.string.harryPotterDesc, R.drawable.harry_potter_1)
+            R.id.sweeneyToddDetailsBtn ->
+                openFilmDescriptionActivity(R.id.sweeneyToddText, R.string.sweeneyToddDesc, R.drawable.sweeney_todd)
+            R.id.ageOfAdalineDetailsBtn ->
+                openFilmDescriptionActivity(R.id.ageOfAdalineText, R.string.ageOfAdalineDesc, R.drawable.age_of_adaline)
         }
     }
     
@@ -84,8 +80,9 @@ class MainActivity : AppCompatActivity() {
                 if (RESULT_OK == (resultCode) && data != null) {
                    val detailInfo = data.getParcelableExtra<FilmDetailsInfo>(DETAILS_INFO)
                    detailInfo?.apply {
-                       Log.i(MainActivity::class.java.toString(), "is liked: $isLiked")
-                       Log.i(MainActivity::class.java.toString(), "comment: $comment")
+                       Log.i(MainActivity::class.java.toString(), "FilmInfo: is liked - $isLiked")
+                       if (comment.isNotEmpty())
+                        Log.i(MainActivity::class.java.toString(), "FilmInfo: comment - $comment")
                    }
                 }
             }

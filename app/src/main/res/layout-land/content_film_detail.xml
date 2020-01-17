@@ -72,7 +72,6 @@
             android:alpha="0.5"
             android:background="@android:color/white"
             android:inputType="textMultiLine"
-            android:lines="5"
-            android:focusedByDefault="false"/>
+            android:lines="5"/>
     </LinearLayout>
 </ScrollView>

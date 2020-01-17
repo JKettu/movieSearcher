@@ -12,7 +12,8 @@ fun TextView.setDefaultTextColor(){
     this.setTextColor(colorAccent)
 }
 
-fun MainActivity.openFilmDescriptionActivity(intent: Intent, textId: Int, descriptionId: Int, posterId: Int) {
+fun MainActivity.openFilmDescriptionActivity(textId: Int, descriptionId: Int, posterId: Int) {
+    val intent = Intent(this, FilmDetailActivity::class.java)
     val text = findViewById<TextView>(textId)
     val colorAccentDark = resources.getColor(R.color.colorAccentDark)
     text.setTextColor(colorAccentDark)
