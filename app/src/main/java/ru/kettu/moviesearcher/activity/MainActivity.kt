@@ -6,11 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.content_main.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.FilmDetailActivity.Companion.DETAILS_INFO
 import ru.kettu.moviesearcher.models.FilmDetailsInfo
+import ru.kettu.moviesearcher.operations.getSelectedTextView
 import ru.kettu.moviesearcher.operations.openFilmDescriptionActivity
 import ru.kettu.moviesearcher.operations.setDefaultTextColor
 
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val SELECTED_FILM_COLOR = "SELECTED_FILM_COLOR"
+        const val SELECTED_FILM_TEXT_ID = "SELECTED_FILM_TEXT_ID"
         const val FILM_INFO = "FILM_INFO"
         const val FILM_DETAILS_INFO_REQUEST_CODE = 1
     }
@@ -30,35 +32,39 @@ class MainActivity : AppCompatActivity() {
 
         savedInstanceState?.let {
             val selectedTextColor = it.getInt(SELECTED_FILM_COLOR)
+            selectedFilmNameId = it.getInt(SELECTED_FILM_TEXT_ID)
             if (selectedTextColor == 0 || selectedFilmNameId == 0) return
-            val selectedText = findViewById<TextView>(selectedFilmNameId)
-            selectedText.setTextColor(selectedTextColor)
+            val selectedText = getSelectedTextView(selectedFilmNameId)
+            selectedText?.setTextColor(selectedTextColor)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (selectedFilmNameId == 0) return
-        val selectedFilm = findViewById<TextView>(selectedFilmNameId)
-        outState.putInt(SELECTED_FILM_COLOR, selectedFilm.currentTextColor)
+        val selectedFilm = getSelectedTextView(selectedFilmNameId)
+        selectedFilm?.let {
+            outState.putInt(SELECTED_FILM_COLOR, it.currentTextColor)
+            outState.putInt(SELECTED_FILM_TEXT_ID, selectedFilmNameId)
+        }
     }
 
     fun onDetailsBtnClick(view: View?){
         if (view == null || view !is Button) return
 
         if (selectedFilmNameId != 0) {
-            val selectedText = findViewById<TextView>(selectedFilmNameId)
-            selectedText.setDefaultTextColor()
+            val selectedText = getSelectedTextView(selectedFilmNameId)
+            selectedText?.setDefaultTextColor()
         }
         when(view.id) {
             R.id.dogsPurposeDetailsBtn ->
-                openFilmDescriptionActivity(R.id.dogsPurposeText, R.string.dogsPurposeDesc, R.drawable.dogs_purpose)
+                openFilmDescriptionActivity(dogsPurposeText, R.string.dogsPurposeDesc, R.drawable.dogs_purpose)
             R.id.harryPotter1DetailsBtn ->
-                openFilmDescriptionActivity(R.id.harryPotterText, R.string.harryPotterDesc, R.drawable.harry_potter_1)
+                openFilmDescriptionActivity(harryPotterText, R.string.harryPotterDesc, R.drawable.harry_potter_1)
             R.id.sweeneyToddDetailsBtn ->
-                openFilmDescriptionActivity(R.id.sweeneyToddText, R.string.sweeneyToddDesc, R.drawable.sweeney_todd)
+                openFilmDescriptionActivity(sweeneyToddText, R.string.sweeneyToddDesc, R.drawable.sweeney_todd)
             R.id.ageOfAdalineDetailsBtn ->
-                openFilmDescriptionActivity(R.id.ageOfAdalineText, R.string.ageOfAdalineDesc, R.drawable.age_of_adaline)
+                openFilmDescriptionActivity(ageOfAdalineText, R.string.ageOfAdalineDesc, R.drawable.age_of_adaline)
         }
     }
     
