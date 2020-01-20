@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="couldntFindDesc">Can\'t find description</string>
+    <string name="harryPotterDesc"><b>Harry Potter and the Sorcerer\'s Stone (2001)</b>\n\n
+        Harry Potter has lived under the stairs at his aunt and uncle\' s house his whole life.
+        But on his 11th birthday, he learns he\'s a powerful wizard — with a place waiting for him
+        at the Hogwarts School of Witchcraft and Wizardry. As he learns to harness his newfound
+        powers with the help of the school\'s kindly headmaster, Harry uncovers the truth
+        about his parents\' deaths — and about the villain who\'s to blame.
+    </string>
+    <string name="sweeneyToddDesc"><b>Sweeney Todd: The Demon Barber of Fleet Street (2007)</b>\n\n
+        The story is about Sweeney Todd, who was first named Benjamin Barker. Todd comes back from
+        the prison camps in Australia, where he was for fifteen years. Then he learns from the pie-maker
+        Mrs. Lovett that his wife poisoned herself after being raped by Judge Turpin. He also finds
+        out that the Judge is keeping his daughter. Todd decides to take revenge. Sweeney and Mrs Lovett
+        become partners in a plan that ends in murder, business for Lovett\' s pie shop, and a lot of sadness.
+    </string>
+    <string name="dogsPurposeDesc"><b>A Dog\'s Purpose (2017)</b>\n\n
+        In the world there are many different breeds of dogs, and all of them, regardless of size
+        and suit, are loyal and devoted friends of their master. Every day they are waiting for your
+        return home and are ready to fulfill all your commands to which you have trained them. The plot
+        of the film revolves around a dog named Bailey, whose soul goes on an amazing journey around
+        the world, replacing cities and hosts. Every time this dog lives a bright and rich life next
+        to his beloved masters who take care of him in every possible way. He is waiting for a lot of
+        exciting adventures with completely different people, but so far he has someone to wait, lick
+        and with whom to play, his dog\'s life is filled with meaning…
+    </string>
+    <string name="ageOfAdalineDesc"><b>The Age of Adaline (2015)</b>\n\n
+        Adaline Bowman was born on January 1, 1908. She was no different from the rest of the people,
+        but in the winter of 1935 her life changed forever. She got into a car accident, after which
+        something incredible happened to her. From that very night she became timeless and did not age
+        for a single day. However, this gift was a real test for her, because all her close relatives
+        were aging, which caused her great pain. Despite her long life, she could not become a happy
+        woman and find her true love. But one day in her life there is a man for whose sake she can
+        again become mortal, to grow old beside him…
+    </string>
+</resources>

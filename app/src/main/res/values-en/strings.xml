@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vulpes</string>
+    <string name="detailsBtn">Details</string>
+    <string name="inviteBtn">Invite</string>
+    <string name="chooser">Invite using...</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment:</string>
+
+    <string name="mainActivityTitle">Film\'s list</string>
+    <string name="sweeneyToddFilm">Sweeney Todd: The Demon Barber of Fleet Street</string>
+    <string name="harryPotterFilm">Harry Potter and the Sorcerer\'s Stone</string>
+    <string name="dogsPurposeFilm">A Dog\'s Purpose</string>
+    <string name="ageOfAdalineFilm">The Age of Adaline</string>
+</resources>
