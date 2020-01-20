@@ -14,6 +14,7 @@ import ru.kettu.moviesearcher.models.FilmDetailsInfo
 import ru.kettu.moviesearcher.operations.getSelectedTextView
 import ru.kettu.moviesearcher.operations.openFilmDescriptionActivity
 import ru.kettu.moviesearcher.operations.setDefaultTextColor
+import ru.kettu.moviesearcher.operations.showAlertDialog
 
 class MainActivity : AppCompatActivity() {
 
@@ -93,5 +94,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        showAlertDialog()
     }
 }
