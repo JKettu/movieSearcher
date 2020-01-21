@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate.*
 import kotlinx.android.synthetic.main.content_main.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.FilmDetailActivity.Companion.DETAILS_INFO
@@ -52,7 +54,6 @@ class MainActivity : AppCompatActivity() {
 
     fun onDetailsBtnClick(view: View?){
         if (view == null || view !is Button) return
-
         if (selectedFilmNameId != 0) {
             val selectedText = getSelectedTextView(selectedFilmNameId)
             selectedText?.setDefaultTextColor()
@@ -98,5 +99,20 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         showAlertDialog()
+    }
+
+    fun onModeSwitchClick(view: View?) {
+        if (view == null || view !is Switch) return
+        if (mode.isChecked) {
+            setDefaultNightMode(MODE_NIGHT_YES)
+            val selectedFilm = getSelectedTextView(selectedFilmNameId)
+            val colorAccentDark = resources.getColor(R.color.colorAccentDark)
+            selectedFilm?.setTextColor(colorAccentDark)
+        } else {
+            setDefaultNightMode(MODE_NIGHT_NO)
+            val selectedFilm = getSelectedTextView(selectedFilmNameId)
+            val colorAccentDark = resources.getColor(R.color.colorAccentDark)
+            selectedFilm?.setTextColor(colorAccentDark)
+        }
     }
 }

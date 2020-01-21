@@ -8,6 +8,8 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="exitQuestion">Вы уверены, что хотите выйти?</string>
+    <string name="dayMode">День</string>
+    <string name="nightMode">Ночь</string>
 
     <string name="mainActivityTitle">Список фильмов</string>
     <string name="sweeneyToddFilm">Суини Тодд, демон-парикмахер с Флит-стрит</string>
