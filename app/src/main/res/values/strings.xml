@@ -5,6 +5,9 @@
     <string name="chooser">Пригласить через...</string>
     <string name="like">Нравится</string>
     <string name="comment">Комментарий:</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="exitQuestion">Вы уверены, что хотите выйти?</string>
 
     <string name="mainActivityTitle">Список фильмов</string>
     <string name="sweeneyToddFilm">Суини Тодд, демон-парикмахер с Флит-стрит</string>

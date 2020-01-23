@@ -1,12 +1,16 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:fontFamily">@font/heldustryft</item>
         <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="backgroundPanelStyle">
+        <item name="android:background">@color/colorPrimaryLight</item>
     </style>
 
     <style name="detailsBtnVerticalViewStyle">
@@ -21,16 +25,11 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="detailsBtnHorizontalViewStyle">
-        <item name="android:background">@drawable/details_btn_background</item>
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:text">@string/detailsBtn</item>
-        <item name="android:layout_width">122dp</item>
+    <style name="detailsBtnHorizontalViewStyle" parent="detailsBtnVerticalViewStyle">
+        <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">20dp</item>
-        <item name="android:layout_marginStart">9dp</item>
-        <item name="android:layout_marginEnd">90dp</item>
-        <item name="android:clickable">true</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">57dp</item>
     </style>
 
     <style name="filmNameStyle">
@@ -63,6 +62,26 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">10dp</item>
         <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="likeCheckboxStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:text">@string/like</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="commentEditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:alpha">0.5</item>
+        <item name="android:background">@color/colorBacking</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:lines">5</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 </resources>

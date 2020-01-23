@@ -2,6 +2,7 @@ package ru.kettu.moviesearcher.operations
 
 import android.content.Intent
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.content_main.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.FilmDetailActivity
@@ -31,4 +32,19 @@ fun MainActivity.getSelectedTextView(textId: Int): TextView? {
         R.id.ageOfAdalineText -> ageOfAdalineText
         else -> null
     }
+}
+
+fun MainActivity.showAlertDialog() {
+    val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+    builder.setMessage(R.string.exitQuestion)
+    builder.setNegativeButton(R.string.no) { dialog, which ->  dialog.dismiss()
+    }
+    builder.setPositiveButton(R.string.yes) { dialog, which ->
+        run {
+            dialog.dismiss()
+            this.finish()
+        }
+    }
+    val dialog: AlertDialog = builder.create()
+    dialog.show()
 }
