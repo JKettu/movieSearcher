@@ -79,7 +79,7 @@
         <item name="android:layout_height">100dp</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:alpha">0.5</item>
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/colorBacking</item>
         <item name="android:inputType">textMultiLine</item>
         <item name="android:lines">5</item>
         <item name="android:textColor">@color/colorAccent</item>

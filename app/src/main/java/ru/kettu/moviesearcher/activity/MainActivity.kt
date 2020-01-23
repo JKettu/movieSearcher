@@ -105,14 +105,12 @@ class MainActivity : AppCompatActivity() {
         if (view == null || view !is Switch) return
         if (mode.isChecked) {
             setDefaultNightMode(MODE_NIGHT_YES)
-            val selectedFilm = getSelectedTextView(selectedFilmNameId)
-            val colorAccentDark = resources.getColor(R.color.colorAccentDark)
-            selectedFilm?.setTextColor(colorAccentDark)
         } else {
             setDefaultNightMode(MODE_NIGHT_NO)
-            val selectedFilm = getSelectedTextView(selectedFilmNameId)
-            val colorAccentDark = resources.getColor(R.color.colorAccentDark)
-            selectedFilm?.setTextColor(colorAccentDark)
         }
+        val selectedFilm = getSelectedTextView(selectedFilmNameId)
+        val colorAccentDark = resources.getColor(R.color.colorAccentDark)
+        selectedFilm?.setTextColor(colorAccentDark)
+        recreate()
     }
 }
