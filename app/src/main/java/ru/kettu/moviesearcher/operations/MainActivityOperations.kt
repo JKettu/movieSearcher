@@ -1,37 +1,19 @@
 package ru.kettu.moviesearcher.operations
 
-import android.content.Intent
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import kotlinx.android.synthetic.main.content_main.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.FilmDetailActivity
 import ru.kettu.moviesearcher.activity.MainActivity
-import ru.kettu.moviesearcher.models.FilmInfo
+import ru.kettu.moviesearcher.item.FilmItem
 
 fun TextView.setDefaultTextColor(){
     val colorAccent = resources.getColor(R.color.colorAccent)
     this.setTextColor(colorAccent)
 }
 
-fun MainActivity.openFilmDescriptionActivity(text: TextView, descriptionId: Int, posterId: Int) {
-    val intent = Intent(this, FilmDetailActivity::class.java)
+fun TextView.setSelectedTextColor(){
     val colorAccentDark = resources.getColor(R.color.colorAccentDark)
-    text.setTextColor(colorAccentDark)
-    this.selectedFilmNameId = text.id
-
-    intent.putExtra(MainActivity.FILM_INFO, FilmInfo(descriptionId, posterId))
-    startActivityForResult(intent, MainActivity.FILM_DETAILS_INFO_REQUEST_CODE)
-}
-
-fun MainActivity.getSelectedTextView(textId: Int): TextView? {
-    return when (textId) {
-        R.id.harryPotterText -> harryPotterText
-        R.id.sweeneyToddText -> sweeneyToddText
-        R.id.dogsPurposeText -> dogsPurposeText
-        R.id.ageOfAdalineText -> ageOfAdalineText
-        else -> null
-    }
+    this.setTextColor(colorAccentDark)
 }
 
 fun MainActivity.showAlertDialog() {
@@ -47,4 +29,13 @@ fun MainActivity.showAlertDialog() {
     }
     val dialog: AlertDialog = builder.create()
     dialog.show()
+}
+
+fun MainActivity.initFilmItems(): ArrayList<FilmItem> {
+    return arrayListOf<FilmItem>(
+        FilmItem(resources.getString(R.string.harryPotterFilm), R.drawable.harry_potter_1),
+        FilmItem(resources.getString(R.string.sweeneyToddFilm), R.drawable.sweeney_todd),
+        FilmItem(resources.getString(R.string.dogsPurposeFilm), R.drawable.dogs_purpose),
+        FilmItem(resources.getString(R.string.ageOfAdalineFilm), R.drawable.age_of_adaline)
+    )
 }

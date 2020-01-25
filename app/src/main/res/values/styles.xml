@@ -17,10 +17,8 @@
         <item name="android:background">@drawable/details_btn_background</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:text">@string/detailsBtn</item>
-        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_width">122dp</item>
         <item name="android:layout_height">20dp</item>
-        <item name="android:layout_marginStart">8dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
         <item name="android:clickable">true</item>
         <item name="android:textSize">12sp</item>
     </style>
@@ -33,18 +31,14 @@
     </style>
 
     <style name="filmNameStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">start</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">25dp</item>
         <item name="android:textSize">10sp</item>
         <!--Tried to do scrolling, but it didn't work. Don't know why =( -->
         <item name="android:scrollHorizontally">true</item>
         <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">marquee</item>
-        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:paddingBottom">5dp</item>
     </style>
 
     <style name="descriptionStyle">
@@ -54,16 +48,13 @@
         <item name="android:gravity">start</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">25dp</item>
-        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="posterStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingBottom">5dp</item>
     </style>
 
     <style name="likeCheckboxStyle">
