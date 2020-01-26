@@ -13,8 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.*
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.item_main_header.*
 import ru.kettu.moviesearcher.R
@@ -22,16 +21,18 @@ import ru.kettu.moviesearcher.activity.FilmDetailActivity.Companion.DETAILS_INFO
 import ru.kettu.moviesearcher.adapter.MainActivityAdapter
 import ru.kettu.moviesearcher.item.FilmItem
 import ru.kettu.moviesearcher.models.FilmDetailsInfo
+import ru.kettu.moviesearcher.models.FilmInfo
 import ru.kettu.moviesearcher.operations.initFilmItems
 import ru.kettu.moviesearcher.operations.showAlertDialog
 
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var filmItems: ArrayList<FilmItem>
-    var isNightModeOn: Boolean = false
+    lateinit var filmItems: List<FilmItem>
+    var isNightModeOn = false
     var selectedText: TextView? = null
     var selectedSpan: Int? = null
+    var favourites = HashSet<FilmInfo>()
 
     companion object {
         const val SELECTED_SPAN = "SELECTED_SPAN"

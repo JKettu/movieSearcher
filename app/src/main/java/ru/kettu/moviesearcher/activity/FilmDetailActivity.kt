@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.MainActivity.Companion.FILM_INFO
+import ru.kettu.moviesearcher.constants.Constants.EMPTY_STRING
 import ru.kettu.moviesearcher.models.FilmDetailsInfo
 import ru.kettu.moviesearcher.models.FilmInfo
 
@@ -42,7 +43,9 @@ class FilmDetailActivity : AppCompatActivity() {
         val intent = Intent()
         val likeCheckBox = findViewById<CheckBox>(R.id.likeCheckBox)
         val commentText = findViewById<EditText>(R.id.comment)
-        intent.putExtra(DETAILS_INFO, FilmDetailsInfo(likeCheckBox.isChecked, if (commentText.text == null) "" else commentText.text.toString()))
+        intent.putExtra(DETAILS_INFO,
+            FilmDetailsInfo(likeCheckBox.isChecked, if (commentText.text == null) EMPTY_STRING
+                                                        else commentText.text.toString()))
         setResult(RESULT_OK,intent)
         super.onBackPressed()
     }

@@ -8,10 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_film.view.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.MainActivity
-import ru.kettu.moviesearcher.operations.getActivity
-import ru.kettu.moviesearcher.operations.openFilmDescriptionActivity
-import ru.kettu.moviesearcher.operations.setDefaultTextColor
-import ru.kettu.moviesearcher.operations.setSelectedTextColor
+import ru.kettu.moviesearcher.operations.*
 
 
 class FilmViewHolder(itemLayout: View) : RecyclerView.ViewHolder(itemLayout) {
@@ -20,8 +17,19 @@ class FilmViewHolder(itemLayout: View) : RecyclerView.ViewHolder(itemLayout) {
     val detailBtn: Button = itemLayout.detailBtn
 
     fun bind(name: String, posterId: Int, position: Int) {
+        val activity = getActivity(itemView)
+        itemView.setOnLongClickListener{
+            run {
+                if (activity is MainActivity) {
+                    val filmInfo = activity.getFilmInfoByFilmName(name)
+                    filmInfo?.let {
+                        activity.favourites.add(it)
+                    }
+                }
+                true
+            }
+        }
         filmName.text = name
-        var activity = getActivity(itemView)
         activity?.let {
             if (activity is MainActivity) {
                 if (activity.selectedSpan == position) {
@@ -33,7 +41,7 @@ class FilmViewHolder(itemLayout: View) : RecyclerView.ViewHolder(itemLayout) {
         poster.setImageResource(posterId)
         detailBtn.setOnClickListener {
             run {
-                var activity = getActivity(itemView)
+                val activity = getActivity(itemView)
                 if (activity is MainActivity) {
                     filmName.setSelectedTextColor()
                     if (activity.selectedText != null)
@@ -54,12 +62,26 @@ class FilmViewHolder(itemLayout: View) : RecyclerView.ViewHolder(itemLayout) {
         when(view.text) {
             resources.getString(R.string.dogsPurposeFilm) ->
                 openFilmDescriptionActivity(R.string.dogsPurposeDesc, R.drawable.dogs_purpose, requestCode, extraName)
-            resources.getString(R.string.harryPotterFilm) ->
+            resources.getString(R.string.harryPotter1Film) ->
                 openFilmDescriptionActivity(R.string.harryPotterDesc, R.drawable.harry_potter_1, requestCode, extraName)
             resources.getString(R.string.sweeneyToddFilm) ->
                 openFilmDescriptionActivity(R.string.sweeneyToddDesc, R.drawable.sweeney_todd, requestCode, extraName)
             resources.getString(R.string.ageOfAdalineFilm) ->
                 openFilmDescriptionActivity(R.string.ageOfAdalineDesc, R.drawable.age_of_adaline, requestCode, extraName)
+            resources.getString(R.string.theAvengersFilm) ->
+                openFilmDescriptionActivity(R.string.theAvengersDesc, R.drawable.the_avengers, requestCode, extraName)
+            resources.getString(R.string.morningGloryFilm) ->
+                openFilmDescriptionActivity(R.string.morningGloryDesc, R.drawable.morning_glory, requestCode, extraName)
+            resources.getString(R.string.theLordOfTheRings1Film) ->
+                openFilmDescriptionActivity(R.string.theLordOfTheRings1Desc, R.drawable.the_lord_of_the_rings1, requestCode, extraName)
+            resources.getString(R.string.treasurePlanetFilm) ->
+                openFilmDescriptionActivity(R.string.treasurePlanetDesc, R.drawable.treasure_planet, requestCode, extraName)
+            resources.getString(R.string.cocoFilm) ->
+                openFilmDescriptionActivity(R.string.cocoDesc, R.drawable.coco, requestCode, extraName)
+            resources.getString(R.string.klausFilm) ->
+                openFilmDescriptionActivity(R.string.klausDesc, R.drawable.klaus, requestCode, extraName)
+            resources.getString(R.string.theNightmareBeforeChristmasFilm) ->
+                openFilmDescriptionActivity(R.string.theNightmareBeforeChristmasDesc, R.drawable.the_nightmare_before_christmas, requestCode, extraName)
         }
     }
 }

@@ -11,7 +11,14 @@
 
     <string name="mainActivityTitle">Список фильмов</string>
     <string name="sweeneyToddFilm">Суини Тодд, демон-парикмахер с Флит-стрит</string>
-    <string name="harryPotterFilm">Гарри Поттер и философский камень</string>
+    <string name="harryPotter1Film">Гарри Поттер и философский камень</string>
     <string name="dogsPurposeFilm">Собачья жизнь</string>
     <string name="ageOfAdalineFilm">Век Адалин</string>
+    <string name="theAvengersFilm">Мстители</string>
+    <string name="morningGloryFilm">Доброе утро</string>
+    <string name="theLordOfTheRings1Film">Властелин колец: Братство кольца</string>
+    <string name="klausFilm">Клаус</string>
+    <string name="treasurePlanetFilm">Планета сокровищ</string>
+    <string name="theNightmareBeforeChristmasFilm">Кошмар перед Рождеством</string>
+    <string name="cocoFilm">Тайна Коко</string>
 </resources>

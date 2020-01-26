@@ -33,9 +33,16 @@ fun MainActivity.showAlertDialog() {
 
 fun MainActivity.initFilmItems(): ArrayList<FilmItem> {
     return arrayListOf<FilmItem>(
-        FilmItem(resources.getString(R.string.harryPotterFilm), R.drawable.harry_potter_1),
+        FilmItem(resources.getString(R.string.harryPotter1Film), R.drawable.harry_potter_1),
         FilmItem(resources.getString(R.string.sweeneyToddFilm), R.drawable.sweeney_todd),
         FilmItem(resources.getString(R.string.dogsPurposeFilm), R.drawable.dogs_purpose),
-        FilmItem(resources.getString(R.string.ageOfAdalineFilm), R.drawable.age_of_adaline)
+        FilmItem(resources.getString(R.string.ageOfAdalineFilm), R.drawable.age_of_adaline),
+        FilmItem(resources.getString(R.string.theAvengersFilm), R.drawable.the_avengers),
+        FilmItem(resources.getString(R.string.morningGloryFilm), R.drawable.morning_glory),
+        FilmItem(resources.getString(R.string.theLordOfTheRings1Film), R.drawable.the_lord_of_the_rings1),
+        FilmItem(resources.getString(R.string.treasurePlanetFilm), R.drawable.treasure_planet),
+        FilmItem(resources.getString(R.string.cocoFilm), R.drawable.coco),
+        FilmItem(resources.getString(R.string.klausFilm), R.drawable.klaus),
+        FilmItem(resources.getString(R.string.theNightmareBeforeChristmasFilm), R.drawable.the_nightmare_before_christmas)
     )
 }
