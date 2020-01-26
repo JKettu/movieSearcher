@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,15 +15,17 @@ import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
-import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_main_header.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.FilmDetailActivity.Companion.DETAILS_INFO
 import ru.kettu.moviesearcher.adapter.MainActivityAdapter
 import ru.kettu.moviesearcher.item.FilmItem
+import ru.kettu.moviesearcher.models.FavouriteInfo
 import ru.kettu.moviesearcher.models.FilmDetailsInfo
 import ru.kettu.moviesearcher.models.FilmInfo
 import ru.kettu.moviesearcher.operations.initFilmItems
+import ru.kettu.moviesearcher.operations.openFavouritesActivity
 import ru.kettu.moviesearcher.operations.showAlertDialog
 
 
@@ -32,13 +35,14 @@ class MainActivity : AppCompatActivity() {
     var isNightModeOn = false
     var selectedText: TextView? = null
     var selectedSpan: Int? = null
-    var favourites = HashSet<FilmInfo>()
+    var favourites = HashSet<FavouriteInfo>()
 
     companion object {
         const val SELECTED_SPAN = "SELECTED_SPAN"
         const val IS_NIGHT_MODE_ON = "IS_NIGHT_MODE_ON"
         const val FILM_INFO = "FILM_INFO"
         const val FILM_DETAILS_INFO_REQUEST_CODE = 1
+        const val FILM_FAVOURITES_REQUEST_CODE = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,9 +57,21 @@ class MainActivity : AppCompatActivity() {
         initRecycleView()
     }
 
+    fun initRecycleView() {
+        val layoutManager =
+            GridLayoutManager( this, resources.getInteger(R.integer.main_activity_columns), VERTICAL, false)
+        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (position == 0) resources.getInteger(R.integer.main_activity_columns) else 1 //set header width
+            }
+        }
+        recycleView?.adapter = MainActivityAdapter(LayoutInflater.from(this), filmItems, isNightModeOn)
+        recycleView?.layoutManager = layoutManager
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(IS_NIGHT_MODE_ON, mode.isChecked)
+        outState.putBoolean(IS_NIGHT_MODE_ON, if (mode == null) isNightModeOn else mode.isChecked)
         selectedSpan?.let {
             outState.putInt(SELECTED_SPAN, selectedSpan!!)
         }
@@ -72,24 +88,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            FILM_DETAILS_INFO_REQUEST_CODE -> {
-                if (RESULT_OK == (resultCode) && data != null) {
-                   val detailInfo = data.getParcelableExtra<FilmDetailsInfo>(DETAILS_INFO)
-                   detailInfo?.apply {
-                       Log.i(MainActivity::class.java.toString(), "FilmInfo: is liked - $isLiked")
-                       if (comment.isNotEmpty())
-                        Log.i(MainActivity::class.java.toString(), "FilmInfo: comment - $comment")
-                   }
-                }
-            }
-        }
-    }
-
-    override fun onBackPressed() {
-        showAlertDialog()
+    fun onFavouritesIconClick(view: View?) {
+        if (view == null || view !is ImageView) return
+        openFavouritesActivity(favourites, FILM_FAVOURITES_REQUEST_CODE, FILM_INFO)
     }
 
     fun onModeSwitchClick(view: View?) {
@@ -102,15 +103,28 @@ class MainActivity : AppCompatActivity() {
         recreate()
     }
 
-    fun initRecycleView() {
-        val layoutManager =
-            GridLayoutManager( this, resources.getInteger(R.integer.main_activity_columns), VERTICAL, false)
-        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (position == 0) resources.getInteger(R.integer.main_activity_columns) else 1 //set header width
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            FILM_DETAILS_INFO_REQUEST_CODE -> {
+                if (RESULT_OK == (resultCode) && data != null) {
+                    val detailInfo = data.getParcelableExtra<FilmDetailsInfo>(DETAILS_INFO)
+                    detailInfo?.apply {
+                        Log.i(MainActivity::class.java.toString(), "FilmInfo: is liked - $isLiked")
+                        if (comment.isNotEmpty())
+                            Log.i(MainActivity::class.java.toString(), "FilmInfo: comment - $comment")
+                    }
+                }
+            }
+            FILM_FAVOURITES_REQUEST_CODE -> {
+                if (RESULT_OK == (resultCode) && data != null) {
+                    favourites = data.getSerializableExtra(FILM_INFO) as HashSet<FavouriteInfo>
+                }
             }
         }
-        recycleView?.adapter = MainActivityAdapter(LayoutInflater.from(this), filmItems, isNightModeOn)
-        recycleView?.layoutManager = layoutManager
+    }
+
+    override fun onBackPressed() {
+        showAlertDialog()
     }
 }

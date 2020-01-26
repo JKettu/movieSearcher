@@ -26,7 +26,7 @@
 
     <Button
         android:id="@+id/detailBtn"
-        style="@style/detailsBtnVerticalViewStyle"
+        style="@style/detailsBtnStyle"
         android:onClick="onDetailsBtnClick"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filmName" />

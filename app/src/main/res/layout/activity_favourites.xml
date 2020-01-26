@@ -4,13 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:orientation="vertical"
-    tools:context=".activity.MainActivity"
-    tools:showIn="@layout/activity_main">
+    android:textColor="@color/colorAccent"
+    tools:context=".activity.FavouritesActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleView"
+        android:id="@+id/recycleViewFav"
         style="@style/backgroundPanelStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -18,8 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_film">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        tools:listitem="@layout/item_favourite" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

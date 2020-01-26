@@ -8,6 +8,7 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="exitQuestion">Вы уверены, что хотите выйти?</string>
+    <string name="deleteBtn">Удалить</string>
 
     <string name="mainActivityTitle">Список фильмов</string>
     <string name="sweeneyToddFilm">Суини Тодд, демон-парикмахер с Флит-стрит</string>

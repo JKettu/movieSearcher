@@ -1,10 +1,15 @@
 package ru.kettu.moviesearcher.operations
 
+import android.content.Intent
+import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import ru.kettu.moviesearcher.R
+import ru.kettu.moviesearcher.activity.FavouritesActivity
 import ru.kettu.moviesearcher.activity.MainActivity
 import ru.kettu.moviesearcher.item.FilmItem
+import ru.kettu.moviesearcher.models.FavouriteInfo
+import ru.kettu.moviesearcher.models.FilmInfo
 
 fun TextView.setDefaultTextColor(){
     val colorAccent = resources.getColor(R.color.colorAccent)
@@ -45,4 +50,12 @@ fun MainActivity.initFilmItems(): ArrayList<FilmItem> {
         FilmItem(resources.getString(R.string.klausFilm), R.drawable.klaus),
         FilmItem(resources.getString(R.string.theNightmareBeforeChristmasFilm), R.drawable.the_nightmare_before_christmas)
     )
+}
+
+fun MainActivity.openFavouritesActivity(favourites: HashSet<FavouriteInfo>, reqCode: Int, extraName: String) {
+    val intent = Intent(this, FavouritesActivity::class.java)
+    val bundle = Bundle()
+    bundle.putSerializable(extraName, favourites)
+    intent.putExtra(extraName, bundle)
+    this.startActivityForResult(intent, reqCode)
 }
