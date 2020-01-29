@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_favourites.*
+import kotlinx.android.synthetic.main.content_add_favorites.*
 import kotlinx.android.synthetic.main.item_favourite.view.*
 import ru.kettu.moviesearcher.activity.FavouritesActivity
 import ru.kettu.moviesearcher.operations.getActivity
@@ -22,9 +23,11 @@ class FavouriteViewHolder(itemOfRecycler: View) : RecyclerView.ViewHolder(itemOf
         deleteBtn.setOnClickListener {
             val activity = getActivity(itemView)
             if (activity is FavouritesActivity) {
-                val elementToRemove = activity.favourites.elementAt(layoutPosition)
-                activity.favourites.remove(elementToRemove)
+                val element = activity.favourites.elementAt(layoutPosition)
+                activity.favourites.remove(element)
+                activity.notInFavourites.add(element)
                 activity.recycleViewFav.adapter?.notifyItemRemoved(layoutPosition)
+                activity.filmsToAddRV.adapter?.notifyItemInserted(activity.notInFavourites.indexOf(element))
             }
         }
     }

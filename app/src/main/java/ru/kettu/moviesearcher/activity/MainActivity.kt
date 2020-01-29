@@ -20,13 +20,13 @@ import kotlinx.android.synthetic.main.item_main_header.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.FilmDetailActivity.Companion.DETAILS_INFO
 import ru.kettu.moviesearcher.adapter.MainActivityAdapter
-import ru.kettu.moviesearcher.item.FilmItem
 import ru.kettu.moviesearcher.models.FavouriteInfo
 import ru.kettu.moviesearcher.models.FilmDetailsInfo
-import ru.kettu.moviesearcher.models.FilmInfo
+import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.operations.initFilmItems
 import ru.kettu.moviesearcher.operations.openFavouritesActivity
 import ru.kettu.moviesearcher.operations.showAlertDialog
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,12 +35,14 @@ class MainActivity : AppCompatActivity() {
     var isNightModeOn = false
     var selectedText: TextView? = null
     var selectedSpan: Int? = null
-    var favourites = HashSet<FavouriteInfo>()
+    var favourites = TreeSet<FavouriteInfo>()
 
     companion object {
         const val SELECTED_SPAN = "SELECTED_SPAN"
         const val IS_NIGHT_MODE_ON = "IS_NIGHT_MODE_ON"
         const val FILM_INFO = "FILM_INFO"
+        const val ALL_FILMS = "ALL_FILMS"
+        const val FAVOURITES = "FAVOURITES"
         const val FILM_DETAILS_INFO_REQUEST_CODE = 1
         const val FILM_FAVOURITES_REQUEST_CODE = 2
     }
@@ -53,16 +55,18 @@ class MainActivity : AppCompatActivity() {
         savedInstanceState?.let {
             isNightModeOn = it.getBoolean(IS_NIGHT_MODE_ON)
             selectedSpan = it.getInt(SELECTED_SPAN)
+            val bundle = it.getBundle(FAVOURITES)
+            favourites = bundle?.getSerializable(FAVOURITES) as TreeSet<FavouriteInfo>
         }
         initRecycleView()
     }
 
     fun initRecycleView() {
         val layoutManager =
-            GridLayoutManager( this, resources.getInteger(R.integer.main_activity_columns), VERTICAL, false)
+            GridLayoutManager( this, resources.getInteger(R.integer.columns), VERTICAL, false)
         layoutManager.spanSizeLookup = object : SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (position == 0) resources.getInteger(R.integer.main_activity_columns) else 1 //set header width
+                return if (position == 0) resources.getInteger(R.integer.columns) else 1 //set header width
             }
         }
         recycleView?.adapter = MainActivityAdapter(LayoutInflater.from(this), filmItems, isNightModeOn)
@@ -75,6 +79,9 @@ class MainActivity : AppCompatActivity() {
         selectedSpan?.let {
             outState.putInt(SELECTED_SPAN, selectedSpan!!)
         }
+        val bundle = Bundle()
+        bundle.putSerializable(FAVOURITES, favourites)
+        outState.putBundle(FAVOURITES, bundle)
     }
     
     fun onInviteBtnClick(view: View?) {
@@ -90,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onFavouritesIconClick(view: View?) {
         if (view == null || view !is ImageView) return
-        openFavouritesActivity(favourites, FILM_FAVOURITES_REQUEST_CODE, FILM_INFO)
+        openFavouritesActivity(favourites, filmItems, FILM_FAVOURITES_REQUEST_CODE)
     }
 
     fun onModeSwitchClick(view: View?) {
@@ -118,7 +125,7 @@ class MainActivity : AppCompatActivity() {
             }
             FILM_FAVOURITES_REQUEST_CODE -> {
                 if (RESULT_OK == (resultCode) && data != null) {
-                    favourites = data.getSerializableExtra(FILM_INFO) as HashSet<FavouriteInfo>
+                    favourites = data.getSerializableExtra(FILM_INFO) as TreeSet<FavouriteInfo>
                 }
             }
         }

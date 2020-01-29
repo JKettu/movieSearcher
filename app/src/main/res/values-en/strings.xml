@@ -10,6 +10,8 @@
     <string name="no">No</string>
     <string name="exitQuestion">Are you sure you want to exit?</string>
     <string name="deleteBtn">Delete</string>
+    <string name="addBtn">Add</string>
+    <string name="addToFavourite">Added to favourites</string>
 
     <string name="mainActivityTitle">Film\'s list</string>
     <string name="sweeneyToddFilm">Sweeney Todd: The Demon Barber of Fleet Street</string>
