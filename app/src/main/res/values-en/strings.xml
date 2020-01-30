@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="empty"></string>
     <string name="app_name">Vulpes</string>
     <string name="detailsBtn">Details</string>
     <string name="inviteBtn">Invite</string>

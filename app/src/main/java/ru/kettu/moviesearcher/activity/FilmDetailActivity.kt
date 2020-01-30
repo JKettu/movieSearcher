@@ -23,6 +23,9 @@ class FilmDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_film_detail)
+        setSupportActionBar(filmDetailToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle(R.string.empty)
         val intentExtras = intent.extras
         val img = filmImg
         val text = filmDesc
@@ -49,5 +52,10 @@ class FilmDetailActivity : AppCompatActivity() {
                                                         else commentText.text.toString()))
         setResult(RESULT_OK,intent)
         super.onBackPressed()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

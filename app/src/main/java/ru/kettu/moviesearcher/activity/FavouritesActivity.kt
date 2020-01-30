@@ -38,6 +38,9 @@ class FavouritesActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favourites)
+        setSupportActionBar(addFavouriteToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle(R.string.empty)
         val intentExtras = intent.extras
         val text = filmNameFav
         if (intentExtras == null) {
@@ -98,5 +101,10 @@ class FavouritesActivity: AppCompatActivity() {
         intent.putExtra(FILM_INFO, favourites)
         setResult(RESULT_OK,intent)
         super.onBackPressed()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
