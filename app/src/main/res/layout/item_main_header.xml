@@ -18,8 +18,7 @@
             android:textAllCaps="false"
             android:textStyle="italic"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:onClick="onModeSwitchClick"/>
+            android:layout_marginStart="5dp"/>
 
         <TextView
             android:id="@+id/filmList"
@@ -42,7 +41,6 @@
             android:drawableEnd="@drawable/fenec_logo"
             android:drawablePadding="10dp"
             android:gravity="end|center"
-            android:onClick="onInviteBtnClick"
             android:text="@string/inviteBtn" />
     </LinearLayout>
 
