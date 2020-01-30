@@ -13,11 +13,10 @@ import kotlinx.android.synthetic.main.activity_favourites.*
 import kotlinx.android.synthetic.main.content_add_favorites.*
 import kotlinx.android.synthetic.main.item_favourite.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.MainActivity.Companion.ALL_FILMS
 import ru.kettu.moviesearcher.activity.MainActivity.Companion.FILM_INFO
 import ru.kettu.moviesearcher.adapter.AddToFavouritesAdapter
 import ru.kettu.moviesearcher.adapter.FavouritesActivityAdapter
-import ru.kettu.moviesearcher.models.FavouriteInfo
+import ru.kettu.moviesearcher.models.item.FavouriteItem
 import ru.kettu.moviesearcher.models.FilmInfo
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.operations.initNotInFavourites
@@ -25,8 +24,8 @@ import java.util.*
 
 class FavouritesActivity: AppCompatActivity() {
 
-    lateinit var favourites: TreeSet<FavouriteInfo>
-    var notInFavourites = TreeSet<FavouriteInfo>()
+    lateinit var favourites: TreeSet<FavouriteItem>
+    var notInFavourites = TreeSet<FavouriteItem>()
     lateinit var allFilms: ArrayList<FilmItem>
 
     companion object {
@@ -47,14 +46,14 @@ class FavouritesActivity: AppCompatActivity() {
         }
         savedInstanceState?.let {
             val savedBundle = it.getBundle(FILMS_LISTS)
-            favourites = savedBundle?.getSerializable(FAVOURITES) as TreeSet<FavouriteInfo>
-            notInFavourites = savedBundle?.getSerializable(NOT_IN_FAVOURITES) as TreeSet<FavouriteInfo>
+            favourites = savedBundle?.getSerializable(FAVOURITES) as TreeSet<FavouriteItem>
+            notInFavourites = savedBundle?.getSerializable(NOT_IN_FAVOURITES) as TreeSet<FavouriteItem>
             allFilms = savedBundle?.getParcelableArrayList<FilmItem>(ALL_FILMS) as ArrayList<FilmItem>
         }
 
         if (savedInstanceState?.getBundle(FILMS_LISTS) == null) {
             val bundle = intentExtras.getBundle(FILM_INFO)
-            favourites = bundle?.getSerializable(FILM_INFO) as TreeSet<FavouriteInfo>
+            favourites = bundle?.getSerializable(FILM_INFO) as TreeSet<FavouriteItem>
             allFilms = bundle?.getParcelableArrayList<FilmInfo>(ALL_FILMS) as ArrayList<FilmItem>
             if (favourites == null) {
                 text.setText(R.string.couldntFindDesc)

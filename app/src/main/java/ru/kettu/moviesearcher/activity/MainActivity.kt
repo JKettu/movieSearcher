@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.item_main_header.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.FilmDetailActivity.Companion.DETAILS_INFO
 import ru.kettu.moviesearcher.adapter.MainActivityAdapter
-import ru.kettu.moviesearcher.models.FavouriteInfo
+import ru.kettu.moviesearcher.models.item.FavouriteItem
 import ru.kettu.moviesearcher.models.FilmDetailsInfo
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.operations.initFilmItems
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     var isNightModeOn = false
     var selectedText: TextView? = null
     var selectedSpan: Int? = null
-    var favourites = TreeSet<FavouriteInfo>()
+    var favourites = TreeSet<FavouriteItem>()
 
     companion object {
         const val SELECTED_SPAN = "SELECTED_SPAN"
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             isNightModeOn = it.getBoolean(IS_NIGHT_MODE_ON)
             selectedSpan = it.getInt(SELECTED_SPAN)
             val bundle = it.getBundle(FAVOURITES)
-            favourites = bundle?.getSerializable(FAVOURITES) as TreeSet<FavouriteInfo>
+            favourites = bundle?.getSerializable(FAVOURITES) as TreeSet<FavouriteItem>
         }
         initRecycleView()
     }
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
             }
             FILM_FAVOURITES_REQUEST_CODE -> {
                 if (RESULT_OK == (resultCode) && data != null) {
-                    favourites = data.getSerializableExtra(FILM_INFO) as TreeSet<FavouriteInfo>
+                    favourites = data.getSerializableExtra(FILM_INFO) as TreeSet<FavouriteItem>
                 }
             }
         }

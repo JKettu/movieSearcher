@@ -16,10 +16,11 @@ class FavouriteViewHolder(itemOfRecycler: View) : RecyclerView.ViewHolder(itemOf
     val filmName: TextView = itemOfRecycler.filmNameFav
     val deleteBtn: Button = itemOfRecycler.deleteFav
 
-    fun bind(posterId: Int?, text: String?) {
-        if (posterId == null || text == null) return
+    fun bind(posterId: Int?, filmNameId: Int) {
+        if (posterId == null || filmNameId == -1) return
         poster.setImageResource(posterId)
-        filmName.text = text
+        val activity = getActivity(itemView)
+        filmName.text = activity?.getString(filmNameId)
         deleteBtn.setOnClickListener {
             val activity = getActivity(itemView)
             if (activity is FavouritesActivity) {

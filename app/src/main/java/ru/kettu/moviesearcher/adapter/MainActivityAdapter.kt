@@ -24,7 +24,7 @@ class MainActivityAdapter (val inflater: LayoutInflater, val items: List<FilmIte
         if (holder is FilmViewHolder) {
             val currentItem = items[position - 1]
             currentItem?.let {
-                holder.bind(it.filmName, it.posterId, position, it.isInFavourite)
+                holder.bind(it.filmNameId, it.posterId, position)
             }
         } else if (holder is MainHeaderViewHolder) {
             holder.bind()

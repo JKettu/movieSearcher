@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_film.view.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.MainActivity
-import ru.kettu.moviesearcher.models.FavouriteInfo
+import ru.kettu.moviesearcher.models.item.FavouriteItem
 import ru.kettu.moviesearcher.operations.*
 
 
@@ -19,14 +19,15 @@ class FilmViewHolder(itemOfRecycler: View) : RecyclerView.ViewHolder(itemOfRecyc
     val poster: ImageView = itemOfRecycler.poster
     val detailBtn: Button = itemOfRecycler.detailBtn
 
-    fun bind(name: String, posterId: Int, position: Int, isInFavourite: Boolean) {
+    fun bind(nameId: Int, posterId: Int, position: Int) {
         val activity = getActivity(itemView)
-        itemView.setOnLongClickListener {
+        val filmNameText = activity?.getString(nameId)
+            itemView.setOnLongClickListener {
             run {
                 if (activity is MainActivity) {
-                    val filmInfo = activity.getFilmInfoByFilmName(name)
+                    val filmInfo = activity.getFilmInfoByFilmName(filmNameText)
                     filmInfo?.let {
-                        val favourite = FavouriteInfo(posterId, name)
+                        val favourite = FavouriteItem(posterId, nameId)
                         activity.favourites.add(favourite)
                         val toast = makeText(activity, R.string.addToFavourite, LENGTH_SHORT)
                         toast.show()
@@ -35,7 +36,7 @@ class FilmViewHolder(itemOfRecycler: View) : RecyclerView.ViewHolder(itemOfRecyc
                 true
             }
         }
-        filmName.text = name
+        filmName.text = filmNameText
         activity?.let {
             if (activity is MainActivity) {
                 if (activity.selectedSpan == position) {

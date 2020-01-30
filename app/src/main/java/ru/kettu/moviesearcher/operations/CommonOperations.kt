@@ -26,7 +26,7 @@ fun Activity.openFilmDescriptionActivity(descriptionId: Int, posterId: Int, reqC
     this.startActivityForResult(intent, reqCode)
 }
 
-fun Activity.getFilmInfoByFilmName(filmName: String): FilmInfo? {
+fun Activity.getFilmInfoByFilmName(filmName: String?): FilmInfo? {
     return when (filmName) {
         resources.getString(R.string.harryPotter1Film) ->
             FilmInfo(R.string.harryPotterDesc, R.drawable.harry_potter_1)
