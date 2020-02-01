@@ -1,14 +1,18 @@
 package ru.kettu.moviesearcher.adapter
 
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.kettu.moviesearcher.R
+import ru.kettu.moviesearcher.activity.fragment.MainFragment.OnMainFragmentAction
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.viewholder.FilmViewHolder
 import ru.kettu.moviesearcher.viewholder.MainHeaderViewHolder
 
-class MainActivityAdapter (val inflater: LayoutInflater, val items: List<FilmItem>, val isNightModeOn: Boolean): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainActivityAdapter (val inflater: LayoutInflater, val items: List<FilmItem>,
+                           val isNightModeOn: Boolean, val listener: OnMainFragmentAction?, val res: Resources)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_FILMS ->
@@ -24,10 +28,10 @@ class MainActivityAdapter (val inflater: LayoutInflater, val items: List<FilmIte
         if (holder is FilmViewHolder) {
             val currentItem = items[position - 1]
             currentItem?.let {
-                holder.bind(it.filmNameId, it.posterId, position)
+                holder.bind(it.filmNameId, it.posterId, position, res, listener)
             }
         } else if (holder is MainHeaderViewHolder) {
-            holder.bind()
+            holder.bind(listener)
         }
     }
 

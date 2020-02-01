@@ -2,25 +2,26 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentFavourites"
     style="@style/backgroundPanelStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textColor="@color/colorAccent"
-    tools:context=".activity.FavouritesActivity">
+    android:textColor="@color/colorAccent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="50dp"
-        android:clipToPadding="true">
+        android:clipToPadding="true"
+        android:paddingBottom="50dp">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/addFavouriteToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/header_background"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/recycleViewFav"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/recycleViewFav"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleViewFav"
@@ -33,6 +34,6 @@
             tools:listitem="@layout/item_favourite" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include layout="@layout/content_add_favorites"/>
+    <include layout="@layout/content_add_favorites" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

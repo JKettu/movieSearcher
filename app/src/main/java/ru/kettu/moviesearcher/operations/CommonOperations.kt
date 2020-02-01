@@ -1,55 +1,79 @@
 package ru.kettu.moviesearcher.operations
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.view.View
+import android.content.res.Resources
+import android.widget.TextView
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.FilmDetailActivity
 import ru.kettu.moviesearcher.models.FilmInfo
+import ru.kettu.moviesearcher.models.item.FavouriteItem
+import ru.kettu.moviesearcher.models.item.FilmItem
+import java.util.*
 
-fun getActivity(view: View): Activity? {
-    var context: Context? = view.context
-    while (context is ContextWrapper) {
-        if (context is Activity) {
-            return context
-        }
-        context = context.baseContext
-    }
-    return null
+fun TextView.setDefaultTextColor() {
+    val colorAccent = resources.getColor(R.color.colorAccent)
+    this.setTextColor(colorAccent)
 }
 
-fun Activity.openFilmDescriptionActivity(descriptionId: Int, posterId: Int, extraName: String) {
-    val intent = Intent(this, FilmDetailActivity::class.java)
-    intent.putExtra(extraName, FilmInfo(descriptionId, posterId))
-    this.startActivity(intent)
+fun TextView.setSelectedTextColor() {
+    val colorAccentDark = resources.getColor(R.color.colorAccentDark)
+    this.setTextColor(colorAccentDark)
 }
 
-fun Activity.getFilmInfoByFilmName(filmName: String?): FilmInfo? {
+fun Resources.initFilmItems(): ArrayList<FilmItem> {
+    return arrayListOf<FilmItem>(
+        FilmItem(R.string.harryPotter1Film, R.drawable.harry_potter_1, getString(R.string.harryPotter1Film)),
+        FilmItem(R.string.sweeneyToddFilm, R.drawable.sweeney_todd, getString(R.string.sweeneyToddFilm)),
+        FilmItem(R.string.dogsPurposeFilm, R.drawable.dogs_purpose, getString(R.string.dogsPurposeFilm)),
+        FilmItem(R.string.ageOfAdalineFilm, R.drawable.age_of_adaline, getString(R.string.ageOfAdalineFilm)),
+        FilmItem(R.string.theAvengersFilm, R.drawable.the_avengers, getString(R.string.theAvengersFilm)),
+        FilmItem(R.string.morningGloryFilm, R.drawable.morning_glory, getString(R.string.morningGloryFilm)),
+        FilmItem(R.string.theLordOfTheRings1Film, R.drawable.the_lord_of_the_rings1, getString(R.string.theLordOfTheRings1Film)),
+        FilmItem(R.string.treasurePlanetFilm, R.drawable.treasure_planet, getString(R.string.treasurePlanetFilm)),
+        FilmItem(R.string.cocoFilm, R.drawable.coco, getString(R.string.cocoFilm)),
+        FilmItem(R.string.klausFilm, R.drawable.klaus, getString(R.string.klausFilm)),
+        FilmItem(
+            R.string.theNightmareBeforeChristmasFilm, R.drawable.the_nightmare_before_christmas,
+            getString(R.string.theNightmareBeforeChristmasFilm))
+    )
+}
+
+fun Resources.getFilmInfoByFilmName(filmName: String?): FilmInfo? {
     return when (filmName) {
-        resources.getString(R.string.harryPotter1Film) ->
-            FilmInfo(R.string.harryPotterDesc, R.drawable.harry_potter_1)
-        resources.getString(R.string.sweeneyToddFilm) ->
-            FilmInfo(R.string.sweeneyToddDesc, R.drawable.sweeney_todd)
-        resources.getString(R.string.dogsPurposeFilm) ->
+        getString(R.string.dogsPurposeFilm) ->
             FilmInfo(R.string.dogsPurposeDesc, R.drawable.dogs_purpose)
-        resources.getString(R.string.ageOfAdalineFilm) ->
+        getString(R.string.harryPotter1Film) ->
+            FilmInfo(R.string.harryPotterDesc, R.drawable.harry_potter_1)
+        getString(R.string.sweeneyToddFilm) ->
+            FilmInfo(R.string.sweeneyToddDesc, R.drawable.sweeney_todd)
+        getString(R.string.ageOfAdalineFilm) ->
             FilmInfo(R.string.ageOfAdalineDesc, R.drawable.age_of_adaline)
-        resources.getString(R.string.theAvengersFilm) ->
+        getString(R.string.theAvengersFilm) ->
             FilmInfo(R.string.theAvengersDesc, R.drawable.the_avengers)
-        resources.getString(R.string.morningGloryFilm) ->
+        getString(R.string.morningGloryFilm) ->
             FilmInfo(R.string.morningGloryDesc, R.drawable.morning_glory)
-        resources.getString(R.string.theLordOfTheRings1Film) ->
+        getString(R.string.theLordOfTheRings1Film) ->
             FilmInfo(R.string.theLordOfTheRings1Desc, R.drawable.the_lord_of_the_rings1)
-        resources.getString(R.string.treasurePlanetFilm) ->
+        getString(R.string.treasurePlanetFilm) ->
             FilmInfo(R.string.treasurePlanetDesc, R.drawable.treasure_planet)
-        resources.getString(R.string.cocoFilm) ->
+        getString(R.string.cocoFilm) ->
             FilmInfo(R.string.cocoDesc, R.drawable.coco)
-        resources.getString(R.string.klausFilm) ->
+        getString(R.string.klausFilm) ->
             FilmInfo(R.string.klausDesc, R.drawable.klaus)
-        resources.getString(R.string.theNightmareBeforeChristmasFilm) ->
-            FilmInfo(R.string.theNightmareBeforeChristmasDesc, R.drawable.the_nightmare_before_christmas)
+        getString(R.string.theNightmareBeforeChristmasFilm) ->
+            FilmInfo(
+                R.string.theNightmareBeforeChristmasDesc,
+                R.drawable.the_nightmare_before_christmas
+            )
         else -> null
+    }
+}
+
+fun Resources.initNotInFavourites(allFilms: ArrayList<FilmItem>?,
+                                  favourites: TreeSet<FavouriteItem>?, notInFavourites: TreeSet<FavouriteItem>) {
+    if (favourites == null) return
+    allFilms?.forEach { film ->
+        run {
+            if (!favourites.contains(FavouriteItem(film.posterId, film.filmNameId)))
+                notInFavourites.add(FavouriteItem(film.posterId, film.filmNameId))
+        }
     }
 }
