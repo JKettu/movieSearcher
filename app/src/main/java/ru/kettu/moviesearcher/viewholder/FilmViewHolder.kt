@@ -64,86 +64,40 @@ class FilmViewHolder(itemOfRecycler: View) : RecyclerView.ViewHolder(itemOfRecyc
 
     private fun MainActivity.onDetailsBtnClick(view: View?) {
         if (view == null || view !is TextView) return
-        val requestCode = MainActivity.FILM_DETAILS_INFO_REQUEST_CODE
         val extraName = MainActivity.FILM_INFO
         when (view.text) {
             resources.getString(R.string.dogsPurposeFilm) ->
-                openFilmDescriptionActivity(
-                    R.string.dogsPurposeDesc,
-                    R.drawable.dogs_purpose,
-                    requestCode,
-                    extraName
-                )
+                openFilmDescriptionActivity(R.string.dogsPurposeDesc, R.drawable.dogs_purpose, extraName)
             resources.getString(R.string.harryPotter1Film) ->
                 openFilmDescriptionActivity(
-                    R.string.harryPotterDesc,
-                    R.drawable.harry_potter_1,
-                    requestCode,
-                    extraName
-                )
+                    R.string.harryPotterDesc, R.drawable.harry_potter_1, extraName)
             resources.getString(R.string.sweeneyToddFilm) ->
                 openFilmDescriptionActivity(
-                    R.string.sweeneyToddDesc,
-                    R.drawable.sweeney_todd,
-                    requestCode,
-                    extraName
-                )
+                    R.string.sweeneyToddDesc, R.drawable.sweeney_todd, extraName)
             resources.getString(R.string.ageOfAdalineFilm) ->
                 openFilmDescriptionActivity(
-                    R.string.ageOfAdalineDesc,
-                    R.drawable.age_of_adaline,
-                    requestCode,
-                    extraName
-                )
+                    R.string.ageOfAdalineDesc, R.drawable.age_of_adaline, extraName)
             resources.getString(R.string.theAvengersFilm) ->
                 openFilmDescriptionActivity(
-                    R.string.theAvengersDesc,
-                    R.drawable.the_avengers,
-                    requestCode,
-                    extraName
-                )
+                    R.string.theAvengersDesc, R.drawable.the_avengers, extraName)
             resources.getString(R.string.morningGloryFilm) ->
                 openFilmDescriptionActivity(
-                    R.string.morningGloryDesc,
-                    R.drawable.morning_glory,
-                    requestCode,
-                    extraName
-                )
+                    R.string.morningGloryDesc, R.drawable.morning_glory, extraName)
             resources.getString(R.string.theLordOfTheRings1Film) ->
                 openFilmDescriptionActivity(
-                    R.string.theLordOfTheRings1Desc,
-                    R.drawable.the_lord_of_the_rings1,
-                    requestCode,
-                    extraName
-                )
+                    R.string.theLordOfTheRings1Desc, R.drawable.the_lord_of_the_rings1, extraName)
             resources.getString(R.string.treasurePlanetFilm) ->
                 openFilmDescriptionActivity(
-                    R.string.treasurePlanetDesc,
-                    R.drawable.treasure_planet,
-                    requestCode,
-                    extraName
-                )
+                    R.string.treasurePlanetDesc, R.drawable.treasure_planet, extraName)
             resources.getString(R.string.cocoFilm) ->
                 openFilmDescriptionActivity(
-                    R.string.cocoDesc,
-                    R.drawable.coco,
-                    requestCode,
-                    extraName
-                )
+                    R.string.cocoDesc, R.drawable.coco, extraName)
             resources.getString(R.string.klausFilm) ->
                 openFilmDescriptionActivity(
-                    R.string.klausDesc,
-                    R.drawable.klaus,
-                    requestCode,
-                    extraName
-                )
+                    R.string.klausDesc, R.drawable.klaus, extraName)
             resources.getString(R.string.theNightmareBeforeChristmasFilm) ->
                 openFilmDescriptionActivity(
-                    R.string.theNightmareBeforeChristmasDesc,
-                    R.drawable.the_nightmare_before_christmas,
-                    requestCode,
-                    extraName
-                )
+                    R.string.theNightmareBeforeChristmasDesc, R.drawable.the_nightmare_before_christmas, extraName)
         }
     }
 }

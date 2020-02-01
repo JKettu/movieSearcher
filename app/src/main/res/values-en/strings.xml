@@ -5,8 +5,6 @@
     <string name="detailsBtn">Details</string>
     <string name="inviteBtn">Invite</string>
     <string name="chooser">Invite using...</string>
-    <string name="like">Like</string>
-    <string name="comment">Comment:</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="exitQuestion">Are you sure you want to exit?</string>

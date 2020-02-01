@@ -2,7 +2,6 @@ package ru.kettu.moviesearcher.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -14,9 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_main_header.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.FilmDetailActivity.Companion.DETAILS_INFO
 import ru.kettu.moviesearcher.adapter.MainActivityAdapter
-import ru.kettu.moviesearcher.models.FilmDetailsInfo
 import ru.kettu.moviesearcher.models.item.FavouriteItem
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.operations.initFilmItems
@@ -39,8 +36,7 @@ class MainActivity : AppCompatActivity() {
         const val FILM_INFO = "FILM_INFO"
         const val ALL_FILMS = "ALL_FILMS"
         const val FAVOURITES = "FAVOURITES"
-        const val FILM_DETAILS_INFO_REQUEST_CODE = 1
-        const val FILM_FAVOURITES_REQUEST_CODE = 2
+        const val FILM_FAVOURITES_REQUEST_CODE = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,16 +84,6 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            FILM_DETAILS_INFO_REQUEST_CODE -> {
-                if (RESULT_OK == (resultCode) && data != null) {
-                    val detailInfo = data.getParcelableExtra<FilmDetailsInfo>(DETAILS_INFO)
-                    detailInfo?.apply {
-                        Log.i(MainActivity::class.java.toString(), "FilmInfo: is liked - $isLiked")
-                        if (comment.isNotEmpty())
-                            Log.i(MainActivity::class.java.toString(), "FilmInfo: comment - $comment")
-                    }
-                }
-            }
             FILM_FAVOURITES_REQUEST_CODE -> {
                 if (RESULT_OK == (resultCode) && data != null) {
                     favourites = data.getSerializableExtra(FILM_INFO) as TreeSet<FavouriteItem>

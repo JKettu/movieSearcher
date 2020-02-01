@@ -20,10 +20,10 @@ fun getActivity(view: View): Activity? {
     return null
 }
 
-fun Activity.openFilmDescriptionActivity(descriptionId: Int, posterId: Int, reqCode: Int, extraName: String) {
+fun Activity.openFilmDescriptionActivity(descriptionId: Int, posterId: Int, extraName: String) {
     val intent = Intent(this, FilmDetailActivity::class.java)
     intent.putExtra(extraName, FilmInfo(descriptionId, posterId))
-    this.startActivityForResult(intent, reqCode)
+    this.startActivity(intent)
 }
 
 fun Activity.getFilmInfoByFilmName(filmName: String?): FilmInfo? {
