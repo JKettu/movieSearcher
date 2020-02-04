@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED
 import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_UNLOCKED
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_add_favorites.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
@@ -174,6 +175,14 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
             val favourite = FilmItem(posterId, nameId)
             favourites.add(favourite)
             lastAddedToFavourite = favourite
+            val snackbar = Snackbar.make(fragmentContainer, R.string.addToFavourite, Snackbar.LENGTH_LONG)
+                .setAction(R.string.cancel) {run {
+                    lastAddedToFavourite?.let {
+                        favourites.remove(lastAddedToFavourite as FilmItem)
+                    }
+                }}
+            snackbar.view.setBackgroundColor(getColor(R.color.colorMenuBase))
+            snackbar.show()
         }
     }
 
