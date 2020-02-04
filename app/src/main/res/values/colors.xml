@@ -5,5 +5,5 @@
     <color name="colorAccent">#684003</color>
     <color name="colorAccentDark">#242019</color>
     <color name="colorPrimaryLight">#fef3e1</color>
-    <color name="colorBacking">#ffffff</color>
+    <color name="colorMenuBase">#fafafa</color>
 </resources>

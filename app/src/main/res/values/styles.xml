@@ -13,6 +13,10 @@
         <item name="android:background">@color/colorPrimaryLight</item>
     </style>
 
+    <style name="snackbarStyle">
+
+    </style>
+
     <style name="btnStyle">
         <item name="android:background">@drawable/btn_background</item>
         <item name="android:textColor">@color/colorAccent</item>

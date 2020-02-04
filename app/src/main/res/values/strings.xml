@@ -2,7 +2,7 @@
     <string name="empty"></string>
     <string name="app_name">Vulpes</string>
     <string name="detailsBtn">Детали</string>
-    <string name="inviteBtn">Пригласить друга</string>
+    <string name="filmList">Список фильмов</string>
     <string name="chooser">Пригласить через...</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
@@ -10,6 +10,14 @@
     <string name="deleteBtn">Удалить</string>
     <string name="addBtn">Добавить</string>
     <string name="addToFavourite">Добавлено в избранное</string>
+    <string name="deletedFromFavourite">Удалено из избранного</string>
+    <string name="mainScreen">Главная</string>
+    <string name="favouritesScreen">Избранное</string>
+    <string name="nightMode">Ночной режим</string>
+    <string name="invite">Пригласить друга</string>
+    <string name="exit">Выход</string>
+    <string name="serviceDesc">Сервис по поиску фильмов</string>
+    <string name="cancel">Отмена</string>
 
     <string name="mainActivityTitle">Список фильмов</string>
     <string name="sweeneyToddFilm">Суини Тодд, демон-парикмахер с Флит-стрит</string>

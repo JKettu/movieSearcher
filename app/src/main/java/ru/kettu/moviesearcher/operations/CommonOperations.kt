@@ -1,10 +1,13 @@
 package ru.kettu.moviesearcher.operations
 
+import android.app.Activity
 import android.content.res.Resources
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
+import androidx.core.app.ActivityCompat
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.models.FilmInfo
-import ru.kettu.moviesearcher.models.item.FavouriteItem
 import ru.kettu.moviesearcher.models.item.FilmItem
 import java.util.*
 
@@ -18,21 +21,19 @@ fun TextView.setSelectedTextColor() {
     this.setTextColor(colorAccentDark)
 }
 
-fun Resources.initFilmItems(): ArrayList<FilmItem> {
+fun initFilmItems(): ArrayList<FilmItem> {
     return arrayListOf<FilmItem>(
-        FilmItem(R.string.harryPotter1Film, R.drawable.harry_potter_1, getString(R.string.harryPotter1Film)),
-        FilmItem(R.string.sweeneyToddFilm, R.drawable.sweeney_todd, getString(R.string.sweeneyToddFilm)),
-        FilmItem(R.string.dogsPurposeFilm, R.drawable.dogs_purpose, getString(R.string.dogsPurposeFilm)),
-        FilmItem(R.string.ageOfAdalineFilm, R.drawable.age_of_adaline, getString(R.string.ageOfAdalineFilm)),
-        FilmItem(R.string.theAvengersFilm, R.drawable.the_avengers, getString(R.string.theAvengersFilm)),
-        FilmItem(R.string.morningGloryFilm, R.drawable.morning_glory, getString(R.string.morningGloryFilm)),
-        FilmItem(R.string.theLordOfTheRings1Film, R.drawable.the_lord_of_the_rings1, getString(R.string.theLordOfTheRings1Film)),
-        FilmItem(R.string.treasurePlanetFilm, R.drawable.treasure_planet, getString(R.string.treasurePlanetFilm)),
-        FilmItem(R.string.cocoFilm, R.drawable.coco, getString(R.string.cocoFilm)),
-        FilmItem(R.string.klausFilm, R.drawable.klaus, getString(R.string.klausFilm)),
-        FilmItem(
-            R.string.theNightmareBeforeChristmasFilm, R.drawable.the_nightmare_before_christmas,
-            getString(R.string.theNightmareBeforeChristmasFilm))
+        FilmItem(R.drawable.harry_potter_1, R.string.harryPotter1Film),
+        FilmItem(R.drawable.sweeney_todd, R.string.sweeneyToddFilm),
+        FilmItem(R.drawable.dogs_purpose, R.string.dogsPurposeFilm),
+        FilmItem(R.drawable.age_of_adaline, R.string.ageOfAdalineFilm),
+        FilmItem(R.drawable.the_avengers, R.string.theAvengersFilm),
+        FilmItem(R.drawable.morning_glory, R.string.morningGloryFilm),
+        FilmItem(R.drawable.the_lord_of_the_rings1, R.string.theLordOfTheRings1Film),
+        FilmItem(R.drawable.treasure_planet, R.string.treasurePlanetFilm),
+        FilmItem(R.drawable.coco, R.string.cocoFilm),
+        FilmItem(R.drawable.klaus, R.string.klausFilm),
+        FilmItem(R.drawable.the_nightmare_before_christmas, R.string.theNightmareBeforeChristmasFilm)
     )
 }
 
@@ -68,12 +69,21 @@ fun Resources.getFilmInfoByFilmName(filmName: String?): FilmInfo? {
 }
 
 fun Resources.initNotInFavourites(allFilms: ArrayList<FilmItem>?,
-                                  favourites: TreeSet<FavouriteItem>?, notInFavourites: TreeSet<FavouriteItem>) {
-    if (favourites == null) return
+                                  films: TreeSet<FilmItem>?, notInFilms: TreeSet<FilmItem>) {
+    if (films == null) return
     allFilms?.forEach { film ->
         run {
-            if (!favourites.contains(FavouriteItem(film.posterId, film.filmNameId)))
-                notInFavourites.add(FavouriteItem(film.posterId, film.filmNameId))
+            if (!films.contains(FilmItem(film.filmPosterId, film.filmNameId)))
+                notInFilms.add(FilmItem(film.filmPosterId, film.filmNameId))
         }
     }
+}
+
+fun onDayNightModeSwitch(mode: SwitchCompat, activity: Activity) {
+    if (mode.isChecked) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    } else {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+    }
+    ActivityCompat.recreate(activity)
 }

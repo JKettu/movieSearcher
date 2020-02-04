@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment.OnFavouritesFragmentAction
-import ru.kettu.moviesearcher.models.item.FavouriteItem
+import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.viewholder.AddFavouriteViewHolder
 import java.util.*
 
-class AddToFavouritesAdapter(val inflater: LayoutInflater, val addItems: TreeSet<FavouriteItem>,
+class AddToFavouritesAdapter(val inflater: LayoutInflater, val addItems: TreeSet<FilmItem>,
                              val listener: OnFavouritesFragmentAction?, val res: Resources):
     RecyclerView.Adapter<AddFavouriteViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddFavouriteViewHolder {

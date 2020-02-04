@@ -10,6 +10,8 @@ import ru.kettu.moviesearcher.models.FilmInfo
 
 class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
 
+    var listener: OnFilmDetailsAction? = null
+
     companion object {
         const val FILM_DETAILS_FRAGMENT = "FILM_DETAILS_FRAGMENT"
 
@@ -31,5 +33,10 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
                 filmImg.setImageResource(poster)
             }
         }
+        listener?.onFragmentCreatedInitToolbar(this)
+    }
+
+    interface OnFilmDetailsAction {
+        fun onFragmentCreatedInitToolbar(fragment: Fragment)
     }
 }
