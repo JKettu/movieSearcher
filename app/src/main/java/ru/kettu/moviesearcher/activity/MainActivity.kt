@@ -93,7 +93,6 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentContainer, MainFragment.newInstance(bundle), MAIN_FRAGMENT)
-            .addToBackStack(MAIN_FRAGMENT)
             .commit()
     }
 
@@ -219,8 +218,8 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         if (fragment is FavouritesFragment) {
             fragment.films.remove(film)
             fragment.notInFavourites.add(film)
-            recycleViewFav.adapter?.notifyItemRemoved(layoutPosition)
-            filmsToAddRV.adapter?.notifyItemInserted(fragment.notInFavourites.indexOf(film))
+            fragment.recycleViewFav.adapter?.notifyItemRemoved(layoutPosition)
+            fragment.filmsToAddRV.adapter?.notifyItemInserted(fragment.notInFavourites.indexOf(film))
             val toast =
                 Toast.makeText(this, R.string.deletedFromFavourite, Toast.LENGTH_SHORT)
             toast.show()
@@ -233,23 +232,31 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
             fragment.films.add(film)
             val elemPosition = fragment.notInFavourites.indexOf(film)
             fragment.notInFavourites.remove(film)
-            recycleViewFav.adapter?.notifyItemInserted(fragment.films.indexOf(film))
-            filmsToAddRV.adapter?.notifyItemRemoved(elemPosition)
+            fragment.recycleViewFav.adapter?.notifyItemInserted(fragment.films.indexOf(film))
+            fragment.filmsToAddRV.adapter?.notifyItemRemoved(elemPosition)
         }
     }
 
     override fun onFragmentCreatedInitToolbar(fragment: Fragment) {
         if (fragment is FilmDetailsFragment) {
             mainToolbar.visibility = GONE
-            detailToolbar.setNavigationOnClickListener { onBackPressed() }
             setSupportActionBar(detailToolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            val newToggle = ActionBarDrawerToggle(this, navigationDrawer, detailToolbar, R.string.empty, R.string.empty)
+            this.toggle = newToggle
+            navigationDrawer.addDrawerListener(newToggle)
             (toggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = false
             (toggle as ActionBarDrawerToggle).setToolbarNavigationClickListener{onBackPressed()}
             navigationDrawer.setDrawerLockMode(LOCK_MODE_LOCKED_CLOSED)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setHomeButtonEnabled(true)
         } else {
-            mainToolbar.visibility = VISIBLE
-            setSupportActionBar(mainToolbar)
+            if (mainToolbar.visibility.equals(GONE)) {
+                mainToolbar.visibility = VISIBLE
+                setSupportActionBar(mainToolbar)
+                val newToggle = ActionBarDrawerToggle(this, navigationDrawer, mainToolbar, R.string.empty, R.string.empty)
+                this.toggle = newToggle
+                navigationDrawer.addDrawerListener(newToggle)
+            }
             (toggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = true
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             navigationDrawer.setDrawerLockMode(LOCK_MODE_UNLOCKED)
