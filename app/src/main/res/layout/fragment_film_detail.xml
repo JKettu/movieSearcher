@@ -57,12 +57,9 @@
             style="@style/descriptionStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity=""
-            android:gravity=""
             android:justificationMode="inter_word"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:text="@string/sweeneyToddDesc" />
 
     </ScrollView>
