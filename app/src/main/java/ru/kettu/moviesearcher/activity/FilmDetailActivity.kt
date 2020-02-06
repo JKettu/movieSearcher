@@ -7,8 +7,10 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.content_film_detail.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.MainActivity.Companion.FILM_INFO
+import ru.kettu.moviesearcher.constants.Constants.EMPTY_STRING
 import ru.kettu.moviesearcher.models.FilmDetailsInfo
 import ru.kettu.moviesearcher.models.FilmInfo
 
@@ -21,9 +23,12 @@ class FilmDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_film_detail)
+        setSupportActionBar(filmDetailToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle(R.string.empty)
         val intentExtras = intent.extras
-        val img = findViewById<ImageView>(R.id.filmImg)
-        val text = findViewById<TextView>(R.id.filmDesc)
+        val img = filmImg
+        val text = filmDesc
         if (intentExtras == null) {
             text.setText(R.string.couldntFindDesc)
             return
@@ -40,10 +45,17 @@ class FilmDetailActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val intent = Intent()
-        val likeCheckBox = findViewById<CheckBox>(R.id.likeCheckBox)
-        val commentText = findViewById<EditText>(R.id.comment)
-        intent.putExtra(DETAILS_INFO, FilmDetailsInfo(likeCheckBox.isChecked, if (commentText.text == null) "" else commentText.text.toString()))
+        val likeCheckBox = likeCheckBox
+        val commentText = comment
+        intent.putExtra(DETAILS_INFO,
+            FilmDetailsInfo(likeCheckBox.isChecked, if (commentText.text == null) EMPTY_STRING
+                                                        else commentText.text.toString()))
         setResult(RESULT_OK,intent)
         super.onBackPressed()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
