@@ -31,6 +31,7 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
             val poster = filmInfo.filmPosterId
             poster?.let {
                 filmImg.setImageResource(poster)
+                filmBack.setImageResource(poster)
             }
         }
         listener?.onFragmentCreatedInitToolbar(this)

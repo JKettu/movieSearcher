@@ -3,6 +3,8 @@ package ru.kettu.moviesearcher.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -17,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_add_favorites.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
+import kotlinx.android.synthetic.main.fragment_film_detail.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment
 import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment.Companion.FAVOURITES_FRAGMENT
@@ -237,11 +240,16 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
 
     override fun onFragmentCreatedInitToolbar(fragment: Fragment) {
         if (fragment is FilmDetailsFragment) {
-            (toggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = false
+            mainToolbar.visibility = GONE
+            detailToolbar.setNavigationOnClickListener { onBackPressed() }
+            setSupportActionBar(detailToolbar)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            (toggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = false
             (toggle as ActionBarDrawerToggle).setToolbarNavigationClickListener{onBackPressed()}
             navigationDrawer.setDrawerLockMode(LOCK_MODE_LOCKED_CLOSED)
         } else {
+            mainToolbar.visibility = VISIBLE
+            setSupportActionBar(mainToolbar)
             (toggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = true
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             navigationDrawer.setDrawerLockMode(LOCK_MODE_UNLOCKED)
