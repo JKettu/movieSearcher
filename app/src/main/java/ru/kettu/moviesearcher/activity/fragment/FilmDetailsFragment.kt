@@ -2,6 +2,7 @@ package ru.kettu.moviesearcher.activity.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_film_detail.*
 import ru.kettu.moviesearcher.R
@@ -25,6 +26,14 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val filmInfo = arguments?.get(FILM_INFO) as FilmInfo
+
+        if (activity is AppCompatActivity) {
+            (activity as AppCompatActivity).setSupportActionBar(detailToolbar)
+            val toolbar = (activity as AppCompatActivity).supportActionBar
+            toolbar?.setTitle(R.string.empty)
+            toolbar?.setDisplayHomeAsUpEnabled(true)
+            toolbar?.setHomeButtonEnabled(true)
+        }
 
         filmInfo?.let {
             filmDesc.text = getString(filmInfo.filmDescriptionId)

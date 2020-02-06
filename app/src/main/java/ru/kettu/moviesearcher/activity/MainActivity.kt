@@ -19,7 +19,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_add_favorites.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
-import kotlinx.android.synthetic.main.fragment_film_detail.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment
 import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment.Companion.FAVOURITES_FRAGMENT
@@ -93,6 +92,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentContainer, MainFragment.newInstance(bundle), MAIN_FRAGMENT)
+            .addToBackStack(MAIN_FRAGMENT)
             .commit()
     }
 
@@ -104,6 +104,11 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         val bundle = Bundle()
         bundle.putSerializable(FAVOURITES, favourites)
         outState.putBundle(FAVOURITES, bundle)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun onBackPressed() {
@@ -240,15 +245,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
     override fun onFragmentCreatedInitToolbar(fragment: Fragment) {
         if (fragment is FilmDetailsFragment) {
             mainToolbar.visibility = GONE
-            setSupportActionBar(detailToolbar)
-            val newToggle = ActionBarDrawerToggle(this, navigationDrawer, detailToolbar, R.string.empty, R.string.empty)
-            this.toggle = newToggle
-            navigationDrawer.addDrawerListener(newToggle)
-            (toggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = false
-            (toggle as ActionBarDrawerToggle).setToolbarNavigationClickListener{onBackPressed()}
             navigationDrawer.setDrawerLockMode(LOCK_MODE_LOCKED_CLOSED)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setHomeButtonEnabled(true)
         } else {
             if (mainToolbar.visibility.equals(GONE)) {
                 mainToolbar.visibility = VISIBLE
