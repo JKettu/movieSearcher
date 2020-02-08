@@ -1,4 +1,4 @@
-package ru.kettu.moviesearcher.operations
+package ru.kettu.moviesearcher.controller
 
 import android.app.Activity
 import android.content.res.Resources

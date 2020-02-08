@@ -29,8 +29,8 @@ import ru.kettu.moviesearcher.activity.fragment.FilmDetailsFragment.OnFilmDetail
 import ru.kettu.moviesearcher.activity.fragment.MainFragment
 import ru.kettu.moviesearcher.activity.fragment.MainFragment.Companion.MAIN_FRAGMENT
 import ru.kettu.moviesearcher.activity.fragment.MainFragment.OnMainFragmentAction
+import ru.kettu.moviesearcher.controller.*
 import ru.kettu.moviesearcher.models.item.FilmItem
-import ru.kettu.moviesearcher.operations.*
 import java.util.*
 
 
@@ -255,6 +255,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
                 navigationDrawer.addDrawerListener(newToggle)
             }
             (toggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = true
+            supportActionBar?.title = getString(R.string.empty)
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
             navigationDrawer.setDrawerLockMode(LOCK_MODE_UNLOCKED)
         }

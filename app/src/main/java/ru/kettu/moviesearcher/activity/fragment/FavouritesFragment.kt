@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,8 +17,8 @@ import ru.kettu.moviesearcher.activity.MainActivity.Companion.ALL_FILMS
 import ru.kettu.moviesearcher.activity.MainActivity.Companion.FAVOURITES
 import ru.kettu.moviesearcher.adapter.AddToFavouritesAdapter
 import ru.kettu.moviesearcher.adapter.FavouritesAdapter
+import ru.kettu.moviesearcher.controller.initNotInFavourites
 import ru.kettu.moviesearcher.models.item.FilmItem
-import ru.kettu.moviesearcher.operations.initNotInFavourites
 import java.util.*
 
 class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
@@ -50,6 +51,10 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
         initFavouritesRecyclerView(currentView?.context)
         initAddFavouritesRecyclerView(currentView?.context)
         listener?.onFragmentCreatedInitToolbar(this)
+        if (activity is AppCompatActivity) {
+            val toolbar = (activity as AppCompatActivity).supportActionBar
+            toolbar?.title = (getString(R.string.favouritesFragmentName))
+        }
     }
 
     private fun initFavouritesRecyclerView(context: Context?) {

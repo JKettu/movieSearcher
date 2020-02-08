@@ -32,7 +32,6 @@ class MainFragment: Fragment(R.layout.fragment_main) {
     }
 
     lateinit var filmItems: List<FilmItem>
-    var isNightModeOn = false
     var selectedSpan: Int? = null
     var favourites = TreeSet<FilmItem>()
 

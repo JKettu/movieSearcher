@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_film_detail.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.MainActivity.Companion.FILM_INFO
+import ru.kettu.moviesearcher.controller.setPosterRoundImgAnimation
 import ru.kettu.moviesearcher.models.FilmInfo
 
 class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
 
     var listener: OnFilmDetailsAction? = null
+    var currentOffset = 0
 
     companion object {
         const val FILM_DETAILS_FRAGMENT = "FILM_DETAILS_FRAGMENT"
@@ -44,6 +47,12 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
             }
         }
         listener?.onFragmentCreatedInitToolbar(this)
+        detailAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            run{
+                currentOffset = setPosterRoundImgAnimation(verticalOffset, currentOffset)
+            }
+
+        })
     }
 
     interface OnFilmDetailsAction {

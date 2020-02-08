@@ -1,4 +1,4 @@
-package ru.kettu.moviesearcher.operations
+package ru.kettu.moviesearcher.controller
 
 import androidx.appcompat.app.AlertDialog
 import ru.kettu.moviesearcher.R
