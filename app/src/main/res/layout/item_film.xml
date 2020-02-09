@@ -14,7 +14,7 @@
         style="@style/posterStyle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/the_avengers" />
+        android:minHeight="178dp"/>
 
     <TextView
         android:id="@+id/filmName"
