@@ -8,8 +8,9 @@ import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_film_detail.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.MainActivity.Companion.FILM_INFO
+import ru.kettu.moviesearcher.controller.loadImage
 import ru.kettu.moviesearcher.controller.setPosterRoundImgAnimation
-import ru.kettu.moviesearcher.models.FilmInfo
+import ru.kettu.moviesearcher.models.item.FilmItem
 
 class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
 
@@ -28,7 +29,7 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val filmInfo = arguments?.get(FILM_INFO) as FilmInfo
+        val filmInfo = arguments?.get(FILM_INFO) as FilmItem
 
         if (activity is AppCompatActivity) {
             (activity as AppCompatActivity).setSupportActionBar(detailToolbar)
@@ -39,12 +40,9 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
         }
 
         filmInfo?.let {
-            filmDesc.text = getString(filmInfo.filmDescriptionId)
-            val poster = filmInfo.filmPosterId
-            poster?.let {
-                filmImg.setImageResource(poster)
-                filmBack.setImageResource(poster)
-            }
+            filmDesc.text = filmInfo.description
+            loadImage(filmImg, filmInfo.posterPath)
+            loadImage(filmBack, filmInfo.posterPath)
         }
         listener?.onFragmentCreatedInitToolbar(this)
         detailAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->

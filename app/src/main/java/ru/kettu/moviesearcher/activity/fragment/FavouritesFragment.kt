@@ -20,6 +20,7 @@ import ru.kettu.moviesearcher.adapter.FavouritesAdapter
 import ru.kettu.moviesearcher.controller.initNotInFavourites
 import ru.kettu.moviesearcher.models.item.FilmItem
 import java.util.*
+import kotlin.collections.HashSet
 
 class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
 
@@ -28,11 +29,11 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
     companion object {
         const val FAVOURITES_FRAGMENT = "FAVOURITES_FRAGMENT"
 
-        fun newInstance(allFilms: List<FilmItem>, films: TreeSet<FilmItem>): FavouritesFragment{
+        fun newInstance(allFilms: Set<FilmItem>, films: Set<FilmItem>): FavouritesFragment{
             val fragment = FavouritesFragment()
             val bundle = Bundle()
-            bundle.putSerializable(ALL_FILMS, allFilms as ArrayList<FilmItem>)
-            bundle.putSerializable(FAVOURITES, films)
+            bundle.putSerializable(ALL_FILMS, allFilms as HashSet<FilmItem>)
+            bundle.putSerializable(FAVOURITES, films as TreeSet<FilmItem>)
             fragment.arguments = bundle
             return fragment
         }
@@ -40,13 +41,13 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
 
     lateinit var films: TreeSet<FilmItem>
     var notInFavourites = TreeSet<FilmItem>()
-    lateinit var allFilms: ArrayList<FilmItem>
+    lateinit var allFilms: HashSet<FilmItem>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val currentView = getView()
         films = arguments?.get(FAVOURITES) as TreeSet<FilmItem>
-        allFilms = arguments?.get(ALL_FILMS) as ArrayList<FilmItem>
+        allFilms = arguments?.get(ALL_FILMS) as HashSet<FilmItem>
         resources.initNotInFavourites(allFilms, films, notInFavourites)
         initFavouritesRecyclerView(currentView?.context)
         initAddFavouritesRecyclerView(currentView?.context)
@@ -63,7 +64,7 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
         val itemDecorator = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
         itemDecorator.setDrawable(resources.getDrawable(R.drawable.separator_line))
         recycleViewFav?.addItemDecoration(itemDecorator)
-        recycleViewFav?.adapter = FavouritesAdapter(LayoutInflater.from(context), films, listener, resources)
+        recycleViewFav?.adapter = FavouritesAdapter(LayoutInflater.from(context), films, listener)
         recycleViewFav?.layoutManager = layoutManager
     }
 
@@ -71,7 +72,7 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
         val layoutManager =
             GridLayoutManager( context, resources.getInteger(R.integer.columns),
                 RecyclerView.VERTICAL, false)
-        filmsToAddRV?.adapter = AddToFavouritesAdapter(LayoutInflater.from(context), notInFavourites, listener, resources)
+        filmsToAddRV?.adapter = AddToFavouritesAdapter(LayoutInflater.from(context), notInFavourites, listener)
         filmsToAddRV?.layoutManager = layoutManager
     }
 

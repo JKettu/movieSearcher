@@ -11,7 +11,7 @@ import ru.kettu.moviesearcher.viewholder.FavouriteViewHolder
 import java.util.*
 
 class FavouritesAdapter (val inflater: LayoutInflater, val items: TreeSet<FilmItem>,
-                         val listener: OnFavouritesFragmentAction?, val res: Resources)
+                         val listener: OnFavouritesFragmentAction?)
     : RecyclerView.Adapter<FavouriteViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouriteViewHolder {
         return FavouriteViewHolder(inflater.inflate(R.layout.item_favourite, parent, false))
@@ -20,8 +20,8 @@ class FavouritesAdapter (val inflater: LayoutInflater, val items: TreeSet<FilmIt
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: FavouriteViewHolder, position: Int) {
-        if (items.size == 0 ) return holder.bind(null, -1,null, listener)
+        if (items.size == 0 ) return
         val filmInfo = items.elementAt(position)
-        return holder.bind(filmInfo.filmPosterId, filmInfo.filmNameId, res, listener)
+        return holder.bind(filmInfo, listener)
     }
 }

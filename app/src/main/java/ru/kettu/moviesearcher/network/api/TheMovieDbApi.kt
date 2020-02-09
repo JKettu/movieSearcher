@@ -11,7 +11,7 @@ import ru.kettu.moviesearcher.models.network.FilmListResponse
 
 interface TheMovieDbApi {
 
-    @GET("movie/now-playing")
+    @GET("movie/now_playing")
     fun getNowPlayingFilms(@Query(LANGUAGE) lang: String, @Query(API_KEY) apiKey: String = THE_MOVIE_DB_API_KEY): Call<FilmListResponse>
 
     @GET("movie/{id}")

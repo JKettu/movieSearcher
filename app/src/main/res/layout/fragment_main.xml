@@ -17,4 +17,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_film" />
+
+    <ProgressBar
+        android:id="@+id/circle_progress_bar"
+        style="@android:style/Widget.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@null"
+        android:max="100"
+        android:rotation="-90"
+        android:visibility="visible"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,9 +2,11 @@ package ru.kettu.moviesearcher.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils.isEmpty
 import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -26,18 +28,24 @@ import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment.OnFavouritesF
 import ru.kettu.moviesearcher.activity.fragment.FilmDetailsFragment
 import ru.kettu.moviesearcher.activity.fragment.FilmDetailsFragment.Companion.FILM_DETAILS_FRAGMENT
 import ru.kettu.moviesearcher.activity.fragment.FilmDetailsFragment.OnFilmDetailsAction
-import ru.kettu.moviesearcher.activity.fragment.MainFragment
-import ru.kettu.moviesearcher.activity.fragment.MainFragment.Companion.MAIN_FRAGMENT
-import ru.kettu.moviesearcher.activity.fragment.MainFragment.OnMainFragmentAction
-import ru.kettu.moviesearcher.controller.*
+import ru.kettu.moviesearcher.activity.fragment.MainFilmListFragment
+import ru.kettu.moviesearcher.activity.fragment.MainFilmListFragment.Companion.MAIN_FRAGMENT
+import ru.kettu.moviesearcher.activity.fragment.MainFilmListFragment.OnMainFragmentAction
+import ru.kettu.moviesearcher.controller.onDayNightModeSwitch
+import ru.kettu.moviesearcher.controller.setDefaultTextColor
+import ru.kettu.moviesearcher.controller.setSelectedTextColor
+import ru.kettu.moviesearcher.controller.showAlertDialog
 import ru.kettu.moviesearcher.models.item.FilmItem
+import ru.kettu.moviesearcher.models.network.FilmDetails
+import ru.kettu.moviesearcher.network.RetrofitApp
 import java.util.*
+import kotlin.collections.HashSet
 
 
 class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
     OnMainFragmentAction, OnFavouritesFragmentAction, OnFilmDetailsAction {
 
-    lateinit var filmItems: List<FilmItem>
+    var filmItems = HashSet<FilmItem>()
     var selectedText: TextView? = null
     var selectedSpan: Int? = null
     var favourites = TreeSet<FilmItem>()
@@ -54,12 +62,16 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        filmItems = initFilmItems()
+
+        if (RetrofitApp.theMovieDbApi == null) {
+            RetrofitApp.onCreate()
+        }
 
         savedInstanceState?.let {
             selectedSpan = it.getInt(SELECTED_SPAN)
-            val bundle = it.getBundle(FAVOURITES)
+            val bundle = it.getBundle(FILM_INFO)
             favourites = bundle?.getSerializable(FAVOURITES) as TreeSet<FilmItem>
+            filmItems = bundle?.getSerializable(ALL_FILMS) as HashSet<FilmItem>
         }
 
         initToolbar()
@@ -84,14 +96,12 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
 
     private fun openMainFragment() {
         val bundle = Bundle()
-        bundle.putSerializable(ALL_FILMS, filmItems as ArrayList<FilmItem>)
-        bundle.putSerializable(FAVOURITES, favourites)
         selectedSpan?.let {
             bundle.putInt(SELECTED_SPAN, selectedSpan!!)
         }
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragmentContainer, MainFragment.newInstance(bundle), MAIN_FRAGMENT)
+            .replace(R.id.fragmentContainer, MainFilmListFragment.newInstance(bundle), MAIN_FRAGMENT)
             .addToBackStack(MAIN_FRAGMENT)
             .commit()
     }
@@ -103,7 +113,8 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         }
         val bundle = Bundle()
         bundle.putSerializable(FAVOURITES, favourites)
-        outState.putBundle(FAVOURITES, bundle)
+        bundle.putSerializable(ALL_FILMS, filmItems as HashSet<FilmItem>)
+        outState.putBundle(FILM_INFO, bundle)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -122,7 +133,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
 
     override fun onAttachFragment(fragment: Fragment) {
         when (fragment) {
-            is MainFragment -> {
+            is MainFilmListFragment -> {
                 fragment.listener = this
             }
             is FavouritesFragment -> {
@@ -138,7 +149,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         when (menuItem.itemId) {
             R.id.mainScreen -> {
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
-                if (fragment !is MainFragment)
+                if (fragment !is MainFilmListFragment)
                     openMainFragment()
             }
             R.id.favouritesScreen -> {
@@ -155,6 +166,10 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         }
         navigationDrawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onItemsInitFinish(filmItems: Set<FilmItem>?) {
+        this.filmItems = if (filmItems == null) HashSet() else filmItems as HashSet<FilmItem>
     }
 
     override fun onPressInvite() {
@@ -176,33 +191,30 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
             .commit()
     }
 
-    override fun onAddToFavourites(posterId: Int, nameId: Int) {
-        val filmInfo = resources.getFilmInfoByFilmName(getString(nameId))
-        filmInfo?.let {
-            val favourite = FilmItem(posterId, nameId)
-            favourites.add(favourite)
-            lastAddedToFavourite = favourite
-            val snackbar = Snackbar.make(fragmentContainer, R.string.addToFavourite, Snackbar.LENGTH_LONG)
-                .setAction(R.string.cancel) {run {
-                    lastAddedToFavourite?.let {
-                        favourites.remove(lastAddedToFavourite as FilmItem)
-                    }
-                }}
-            snackbar.view.setBackgroundColor(getColor(R.color.colorMenuBase))
-            snackbar.show()
-        }
+    override fun onAddToFavourites(details: FilmDetails) {
+        val favourite = FilmItem(details.title, details.overview, details.posterPath)
+        favourites.add(favourite)
+        lastAddedToFavourite = favourite
+        val snackbar = Snackbar.make(fragmentContainer, R.string.addToFavourite, Snackbar.LENGTH_LONG)
+            .setAction(R.string.cancel) {run {
+                lastAddedToFavourite?.let {
+                    favourites.remove(lastAddedToFavourite as FilmItem)
+                }
+            }}
+        snackbar.view.setBackgroundColor(getColor(R.color.colorMenuBase))
+        snackbar.show()
     }
 
-    override fun onDetailsBtnPressed(filmName: TextView, layoutPosition: Int) {
+    override fun onDetailsBtnPressed(filmName: TextView, details: FilmDetails, layoutPosition: Int) {
         filmName.setSelectedTextColor()
         if (selectedText != null)
             selectedText!!.setDefaultTextColor()
 
         selectedSpan = layoutPosition
         selectedText = filmName
-        val filmInfo = resources.getFilmInfoByFilmName(filmName.text?.toString())
+        val filmInfo = FilmItem(details.title, details.overview, details.posterPath)
         val bundle = Bundle()
-        bundle.putParcelable(FILM_INFO, filmInfo)
+        bundle.putSerializable(FILM_INFO, filmInfo)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentContainer,

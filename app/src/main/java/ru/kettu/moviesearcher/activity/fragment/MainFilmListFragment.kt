@@ -1,65 +1,59 @@
 package ru.kettu.moviesearcher.activity.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_main.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.activity.MainActivity.Companion.ALL_FILMS
 import ru.kettu.moviesearcher.activity.MainActivity.Companion.FAVOURITES
+import ru.kettu.moviesearcher.activity.MainActivity.Companion.FILM_INFO
 import ru.kettu.moviesearcher.activity.MainActivity.Companion.SELECTED_SPAN
-import ru.kettu.moviesearcher.adapter.FilmListAdapter
+import ru.kettu.moviesearcher.controller.initRecycleView
 import ru.kettu.moviesearcher.models.item.FilmItem
+import ru.kettu.moviesearcher.models.network.FilmDetails
 import java.util.*
+import kotlin.collections.HashSet
 
-class MainFragment: Fragment(R.layout.fragment_main) {
+class MainFilmListFragment: Fragment(R.layout.fragment_main) {
 
     var listener: OnMainFragmentAction? = null
+    lateinit var progressBar: ProgressBar
 
     companion object {
         const val MAIN_FRAGMENT = "MAIN_FRAGMENT"
 
-        fun newInstance(bundle: Bundle): MainFragment{
-            val fragment = MainFragment()
+        fun newInstance(bundle: Bundle): MainFilmListFragment{
+            val fragment = MainFilmListFragment()
             fragment.arguments = bundle
             return fragment
         }
     }
 
-    lateinit var filmItems: List<FilmItem>
+    var filmItems = HashSet<FilmItem>()
     var selectedSpan: Int? = null
     var favourites = TreeSet<FilmItem>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        progressBar = ProgressBar(this.context)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val currentView = getView()
         savedInstanceState?.let {
             selectedSpan = it.getInt(SELECTED_SPAN)
-            val bundle = it.getBundle(FAVOURITES)
+            val bundle = it.getBundle(FILM_INFO)
             favourites = bundle?.getSerializable(FAVOURITES) as TreeSet<FilmItem>
+            filmItems = bundle?.getSerializable(ALL_FILMS) as HashSet<FilmItem>
         }
-        filmItems = arguments?.get(ALL_FILMS) as ArrayList<FilmItem>
 
-        initRecycleView(currentView)
-        listener?.onFragmentCreatedInitToolbar(this)
-    }
-
-    fun initRecycleView(currentView: View?) {
-        val layoutManager =
-            GridLayoutManager( currentView?.context, resources.getInteger(R.integer.columns), RecyclerView.VERTICAL, false)
-        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (position == 0) resources.getInteger(R.integer.columns) else 1 //set header width
-            }
+        currentView?.let {
+            progressBar.visibility = View.VISIBLE
+            initRecycleView(currentView)
         }
-        recycleView?.adapter = FilmListAdapter(LayoutInflater.from(currentView?.context),
-            filmItems, listener, resources)
-        recycleView?.layoutManager = layoutManager
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -69,18 +63,21 @@ class MainFragment: Fragment(R.layout.fragment_main) {
         }
         val bundle = Bundle()
         bundle.putSerializable(FAVOURITES, favourites)
-        outState.putBundle(FAVOURITES, bundle)
+        bundle.putSerializable(ALL_FILMS, filmItems as HashSet<FilmItem>)
+        outState.putBundle(FILM_INFO, bundle)
     }
 
     interface OnMainFragmentAction {
+
+        fun onItemsInitFinish(filmItems: Set<FilmItem>?)
 
         fun onPressInvite()
 
         fun onPressFavourites()
 
-        fun onAddToFavourites(posterId: Int, nameId: Int)
+        fun onAddToFavourites(details: FilmDetails)
 
-        fun onDetailsBtnPressed(filmName: TextView, layoutPosition: Int)
+        fun onDetailsBtnPressed(filmName: TextView, details: FilmDetails, layoutPosition: Int)
 
         fun onRestoreMarkedFilmName(filmName: TextView, position: Int)
 
