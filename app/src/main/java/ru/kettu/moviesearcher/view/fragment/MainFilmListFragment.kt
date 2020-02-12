@@ -11,10 +11,6 @@ import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.controller.getFilmsFromPage
 import ru.kettu.moviesearcher.controller.initRecycleView
 import ru.kettu.moviesearcher.models.item.FilmItem
-import ru.kettu.moviesearcher.view.activity.MainActivity.Companion.ALL_FILMS
-import ru.kettu.moviesearcher.view.activity.MainActivity.Companion.FAVOURITES
-import ru.kettu.moviesearcher.view.activity.MainActivity.Companion.FILM_INFO
-import ru.kettu.moviesearcher.view.activity.MainActivity.Companion.SELECTED_SPAN
 import java.util.*
 
 class MainFilmListFragment: Fragment(R.layout.fragment_main) {
@@ -24,9 +20,17 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
     companion object {
         const val MAIN_FRAGMENT = "MAIN_FRAGMENT"
         const val LOADED_PAGE = "LOADED_PAGE"
+        const val FILM_INFO = "FILM_INFO"
+        const val ALL_FILMS = "ALL_FILMS"
+        const val FAVOURITES = "FAVOURITES"
+        const val SELECTED_SPAN = "SELECTED_SPAN"
 
-        fun newInstance(bundle: Bundle): MainFilmListFragment {
+        fun newInstance(selectedSpan: Int?): MainFilmListFragment {
             val fragment = MainFilmListFragment()
+            val bundle = Bundle()
+            selectedSpan?.let {
+                bundle.putInt(SELECTED_SPAN, selectedSpan)
+            }
             fragment.arguments = bundle
             return fragment
         }
@@ -36,10 +40,6 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
     var selectedSpan: Int? = null
     var favourites = LinkedHashSet<FilmItem>()
     var currentLoadedPage = 1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

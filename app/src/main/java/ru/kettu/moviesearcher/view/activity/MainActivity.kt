@@ -85,13 +85,9 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
     }
 
     private fun openMainFragment() {
-        val bundle = Bundle()
-        selectedSpan?.let {
-            bundle.putInt(SELECTED_SPAN, selectedSpan!!)
-        }
         supportFragmentManager
-            .loadFragmentWithBackStack(R.id.fragmentContainer,
-                MainFilmListFragment.newInstance(bundle), MAIN_FRAGMENT)
+            .loadFragmentWithoutBackStack(R.id.fragmentContainer,
+                MainFilmListFragment.newInstance(selectedSpan), MAIN_FRAGMENT)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -111,8 +107,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 1
-            && supportFragmentManager.findFragmentByTag(MAIN_FRAGMENT) != null) {
+        if (supportFragmentManager.backStackEntryCount == 0) {
             showAlertDialog()
         } else {
             supportFragmentManager.popBackStack()
@@ -172,7 +167,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
 
     override fun onPressFavourites() {
         supportFragmentManager
-            .loadFragmentWithBackStack(R.id.fragmentContainer,
+            .loadFragmentWithoutBackStack(R.id.fragmentContainer,
                 FavouritesFragment.newInstance(filmItems, favourites), FAVOURITES_FRAGMENT)
     }
 
@@ -187,7 +182,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
                     }
                 }
             }
-        snackbar.view.setBackgroundColor(getColor(R.color.colorMenuBase))
+        snackbar.view.setBackgroundColor(resources.getColor(R.color.colorMenuBase))
         snackbar.show()
     }
 

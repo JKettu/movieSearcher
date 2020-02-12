@@ -55,6 +55,13 @@ fun loadImage(imageView: ImageView, fullImagePath: String?) {
         .into(imageView)
 }
 
+
+fun FragmentManager.loadFragmentWithoutBackStack(fragmentId: Int, fragment: Fragment, name: String) {
+    this.beginTransaction()
+        .replace(fragmentId, fragment, name)
+        .commit()
+}
+
 fun FragmentManager.loadFragmentWithBackStack(fragmentId: Int, fragment: Fragment, name: String) {
     this.beginTransaction()
         .replace(fragmentId, fragment, name)

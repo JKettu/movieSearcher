@@ -10,7 +10,6 @@ import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.controller.initFilmDetailLoading
 import ru.kettu.moviesearcher.controller.setPosterRoundImgAnimation
 import ru.kettu.moviesearcher.models.item.FilmItem
-import ru.kettu.moviesearcher.view.activity.MainActivity.Companion.FILM_INFO
 
 class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
 
@@ -19,6 +18,7 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
 
     companion object {
         const val FILM_DETAILS_FRAGMENT = "FILM_DETAILS_FRAGMENT"
+        const val FILM_INFO = "FILM_INFO"
 
         fun newInstance(bundle: Bundle): FilmDetailsFragment {
             val fragment = FilmDetailsFragment()

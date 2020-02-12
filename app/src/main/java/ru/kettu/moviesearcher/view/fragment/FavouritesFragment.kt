@@ -15,8 +15,6 @@ import kotlinx.android.synthetic.main.fragment_favourites.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.controller.initNotInFavourites
 import ru.kettu.moviesearcher.models.item.FilmItem
-import ru.kettu.moviesearcher.view.activity.MainActivity.Companion.ALL_FILMS
-import ru.kettu.moviesearcher.view.activity.MainActivity.Companion.FAVOURITES
 import ru.kettu.moviesearcher.view.recyclerview.adapter.AddToFavouritesAdapter
 import ru.kettu.moviesearcher.view.recyclerview.adapter.FavouritesAdapter
 import java.util.*
@@ -27,6 +25,8 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
 
     companion object {
         const val FAVOURITES_FRAGMENT = "FAVOURITES_FRAGMENT"
+        const val ALL_FILMS = "ALL_FILMS"
+        const val FAVOURITES = "FAVOURITES"
 
         fun newInstance(allFilms: Set<FilmItem>, films: Set<FilmItem>): FavouritesFragment {
             val fragment = FavouritesFragment()
