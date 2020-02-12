@@ -57,22 +57,58 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:fillViewport="true"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/fragment_film_detail">
 
-        <TextView
-            android:id="@+id/filmDesc"
-            style="@style/descriptionStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:justificationMode="inter_word"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            tools:text="@string/sweeneyToddDesc" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+            <TextView
+                    android:id="@+id/filmTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toTopOf="@+id/filmDesc"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@string/sweeneyToddFilm" />
+
+            <TextView
+                    android:id="@+id/filmDesc"
+                    style="@style/descriptionStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:justificationMode="inter_word"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/filmTitle"
+                    tools:text="@string/sweeneyToddDesc" />
+
+            <ProgressBar
+                    android:id="@+id/circle_progress_bar"
+                    style="@android:style/Widget.ProgressBar.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@null"
+                    android:max="100"
+                    android:rotation="-90"
+                    android:visibility="visible"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

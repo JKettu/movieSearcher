@@ -4,8 +4,14 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View.*
 import kotlinx.android.synthetic.main.fragment_film_detail.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.fragment.FilmDetailsFragment
+import ru.kettu.moviesearcher.constants.NetworkConstants.POSTER_PREFIX
+import ru.kettu.moviesearcher.models.network.FilmDetails
+import ru.kettu.moviesearcher.network.RetrofitApp
+import ru.kettu.moviesearcher.view.fragment.FilmDetailsFragment
 
 fun FilmDetailsFragment.setPosterRoundImgAnimation(verticalOffset: Int, currentOffset: Int): Int {
     val fragment = this
@@ -47,4 +53,27 @@ fun FilmDetailsFragment.setPosterRoundImgAnimation(verticalOffset: Int, currentO
         }
     }
     return verticalOffset
+}
+
+fun initFilmDetailLoading(filmId: Int, fragment: FilmDetailsFragment) {
+    val resources = fragment.resources
+    val movieDbApi = RetrofitApp.theMovieDbApi
+    val call = movieDbApi?.getFilmDetails(filmId, resources.configuration.locale.language)
+    call?.enqueue(object : Callback<FilmDetails> {
+        override fun onResponse(call: Call<FilmDetails>, response: Response<FilmDetails>) {
+            val film = response.body()
+            film?.let {
+                fragment.filmDesc.text = film.overview
+                fragment.filmTitle.text = film.title
+                loadImage(fragment.filmImg, POSTER_PREFIX + film.posterPath)
+                loadImage(fragment.filmBack, POSTER_PREFIX + film.posterPath)
+            }
+            fragment.circle_progress_bar.visibility = INVISIBLE
+        }
+
+        override fun onFailure(call: Call<FilmDetails>, t: Throwable) {
+            System.out.println(t.stackTrace)
+            fragment.circle_progress_bar.visibility = INVISIBLE
+        }
+    })
 }

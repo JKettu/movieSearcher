@@ -2,7 +2,7 @@ package ru.kettu.moviesearcher.controller
 
 import androidx.appcompat.app.AlertDialog
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.MainActivity
+import ru.kettu.moviesearcher.view.activity.MainActivity
 
 fun MainActivity.showAlertDialog() {
     val builder: AlertDialog.Builder = AlertDialog.Builder(this)

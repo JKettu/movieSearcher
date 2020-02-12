@@ -1,4 +1,4 @@
-package ru.kettu.moviesearcher.viewholder
+package ru.kettu.moviesearcher.view.recyclerview.viewholder
 
 import android.view.View
 import android.widget.Button
@@ -6,10 +6,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_film.view.*
-import ru.kettu.moviesearcher.activity.fragment.MainFilmListFragment
-import ru.kettu.moviesearcher.constants.NetworkConstants.POSTER_PREFIX
 import ru.kettu.moviesearcher.controller.loadImage
-import ru.kettu.moviesearcher.models.network.FilmDetails
+import ru.kettu.moviesearcher.models.item.FilmItem
+import ru.kettu.moviesearcher.view.fragment.MainFilmListFragment
 
 
 class FilmViewHolder(itemOfRecycler: View) : RecyclerView.ViewHolder(itemOfRecycler) {
@@ -17,18 +16,18 @@ class FilmViewHolder(itemOfRecycler: View) : RecyclerView.ViewHolder(itemOfRecyc
     val poster: ImageView = itemOfRecycler.poster
     val detailBtn: Button = itemOfRecycler.detailBtn
 
-    fun bind(details: FilmDetails, position: Int, listener: MainFilmListFragment.OnMainFragmentAction?) {
+    fun bind(item: FilmItem, position: Int, listener: MainFilmListFragment.OnMainFragmentAction?) {
         itemView.setOnLongClickListener {
             run {
-                listener?.onAddToFavourites(details)
+                listener?.onAddToFavourites(item)
                 true
             }
         }
-        this.filmName.text = details.title
-        loadImage(poster, POSTER_PREFIX + details.posterPath)
+        this.filmName.text = item.title
+        loadImage(poster, item.posterPath)
         listener?.onRestoreMarkedFilmName(this.filmName, position)
         detailBtn.setOnClickListener {
-            listener?.onDetailsBtnPressed(this.filmName, details, layoutPosition)
+            listener?.onDetailsBtnPressed(this.filmName, item, layoutPosition)
         }
     }
 }

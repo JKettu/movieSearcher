@@ -1,4 +1,4 @@
-package ru.kettu.moviesearcher.viewholder
+package ru.kettu.moviesearcher.view.recyclerview.viewholder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

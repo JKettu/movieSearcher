@@ -1,20 +1,25 @@
-package ru.kettu.moviesearcher.adapter
+package ru.kettu.moviesearcher.view.recyclerview.adapter
 
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment.OnFavouritesFragmentAction
 import ru.kettu.moviesearcher.models.item.FilmItem
-import ru.kettu.moviesearcher.viewholder.AddFavouriteViewHolder
+import ru.kettu.moviesearcher.view.fragment.FavouritesFragment.OnFavouritesFragmentAction
+import ru.kettu.moviesearcher.view.recyclerview.viewholder.AddFavouriteViewHolder
 import java.util.*
 
-class AddToFavouritesAdapter(val inflater: LayoutInflater, val addItems: TreeSet<FilmItem>,
+class AddToFavouritesAdapter(val inflater: LayoutInflater, val addItems: LinkedHashSet<FilmItem>,
                              val listener: OnFavouritesFragmentAction?):
     RecyclerView.Adapter<AddFavouriteViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddFavouriteViewHolder {
-        return AddFavouriteViewHolder(inflater.inflate(R.layout.item_add_to_favourite, parent, false))
+        return AddFavouriteViewHolder(
+            inflater.inflate(
+                R.layout.item_add_to_favourite,
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount() = addItems.size

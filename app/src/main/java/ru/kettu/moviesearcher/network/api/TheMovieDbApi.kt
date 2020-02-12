@@ -7,15 +7,17 @@ import retrofit2.http.Query
 import ru.kettu.moviesearcher.constants.NetworkConstants.THE_MOVIE_DB_API_KEY
 import ru.kettu.moviesearcher.constants.QueryParamsConstants.API_KEY
 import ru.kettu.moviesearcher.constants.QueryParamsConstants.LANGUAGE
+import ru.kettu.moviesearcher.constants.QueryParamsConstants.PAGE
+import ru.kettu.moviesearcher.models.network.FilmDetails
 import ru.kettu.moviesearcher.models.network.FilmListResponse
 
 interface TheMovieDbApi {
 
     @GET("movie/now_playing")
-    fun getNowPlayingFilms(@Query(LANGUAGE) lang: String, @Query(API_KEY) apiKey: String = THE_MOVIE_DB_API_KEY): Call<FilmListResponse>
+    fun getNowPlayingFilms(@Query(LANGUAGE) lang: String, @Query(PAGE) page: Int = 1 ,@Query(API_KEY) apiKey: String = THE_MOVIE_DB_API_KEY): Call<FilmListResponse>
 
     @GET("movie/{id}")
     fun getFilmDetails(@Path("id") id: Int,
                        @Query(LANGUAGE) lang: String,
-                       @Query(API_KEY) apiKey: String = THE_MOVIE_DB_API_KEY): Call<FilmListResponse>
+                       @Query(API_KEY) apiKey: String = THE_MOVIE_DB_API_KEY): Call<FilmDetails>
 }

@@ -1,11 +1,11 @@
-package ru.kettu.moviesearcher.viewholder
+package ru.kettu.moviesearcher.view.recyclerview.viewholder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_add_to_favourite.view.*
-import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment.OnFavouritesFragmentAction
 import ru.kettu.moviesearcher.controller.loadImage
 import ru.kettu.moviesearcher.models.item.FilmItem
+import ru.kettu.moviesearcher.view.fragment.FavouritesFragment.OnFavouritesFragmentAction
 
 class AddFavouriteViewHolder(itemOfRecycler: View): RecyclerView.ViewHolder(itemOfRecycler) {
     val poster = itemOfRecycler.addToFavPoster

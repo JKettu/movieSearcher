@@ -1,4 +1,4 @@
-package ru.kettu.moviesearcher.activity.fragment
+package ru.kettu.moviesearcher.view.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -7,10 +7,10 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_film_detail.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.MainActivity.Companion.FILM_INFO
-import ru.kettu.moviesearcher.controller.loadImage
+import ru.kettu.moviesearcher.controller.initFilmDetailLoading
 import ru.kettu.moviesearcher.controller.setPosterRoundImgAnimation
 import ru.kettu.moviesearcher.models.item.FilmItem
+import ru.kettu.moviesearcher.view.activity.MainActivity.Companion.FILM_INFO
 
 class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
 
@@ -20,7 +20,7 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
     companion object {
         const val FILM_DETAILS_FRAGMENT = "FILM_DETAILS_FRAGMENT"
 
-        fun newInstance(bundle: Bundle): FilmDetailsFragment{
+        fun newInstance(bundle: Bundle): FilmDetailsFragment {
             val fragment = FilmDetailsFragment()
             fragment.arguments = bundle
             return fragment
@@ -39,11 +39,7 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
             toolbar?.setHomeButtonEnabled(true)
         }
 
-        filmInfo?.let {
-            filmDesc.text = filmInfo.description
-            loadImage(filmImg, filmInfo.posterPath)
-            loadImage(filmBack, filmInfo.posterPath)
-        }
+        initFilmDetailLoading(filmInfo.id, this)
         listener?.onFragmentCreatedInitToolbar(this)
         detailAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             run{
