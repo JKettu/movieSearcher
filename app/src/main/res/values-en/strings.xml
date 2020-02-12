@@ -3,16 +3,23 @@
     <string name="empty"></string>
     <string name="app_name">Vulpes</string>
     <string name="detailsBtn">Details</string>
-    <string name="inviteBtn">Invite</string>
+    <string name="filmList">Film details</string>
     <string name="chooser">Invite using...</string>
-    <string name="like">Like</string>
-    <string name="comment">Comment:</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="exitQuestion">Are you sure you want to exit?</string>
     <string name="deleteBtn">Delete</string>
     <string name="addBtn">Add</string>
     <string name="addToFavourite">Added to favourites</string>
+    <string name="deletedFromFavourite">Deleted from favourites</string>
+    <string name="mainScreen">Main</string>
+    <string name="favouritesScreen">Favourites</string>
+    <string name="nightMode">Night mode</string>
+    <string name="invite">Invite</string>
+    <string name="exit">Exit</string>
+    <string name="serviceDesc">Film\'s search service</string>
+    <string name="cancel">Cancel</string>
+    <string name="favouritesFragmentName">Favourites</string>
 
     <string name="mainActivityTitle">Film\'s list</string>
     <string name="sweeneyToddFilm">Sweeney Todd: The Demon Barber of Fleet Street</string>

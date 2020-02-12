@@ -58,23 +58,4 @@
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:paddingBottom">5dp</item>
     </style>
-
-    <style name="likeCheckboxStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">2</item>
-        <item name="android:text">@string/like</item>
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
-
-    <style name="commentEditTextStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">100dp</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:alpha">0.5</item>
-        <item name="android:background">@color/colorBacking</item>
-        <item name="android:inputType">textMultiLine</item>
-        <item name="android:lines">5</item>
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
 </resources>

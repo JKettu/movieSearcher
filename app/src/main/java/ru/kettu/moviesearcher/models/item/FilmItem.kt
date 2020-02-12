@@ -1,8 +1,21 @@
 package ru.kettu.moviesearcher.models.item
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
 
-@Parcelize
-data class FilmItem (val filmNameId: Int, val posterId: Int, val isInFavourite : Boolean = false): Parcelable {
+data class FilmItem (val filmPosterId: Int, val filmNameId: Int): Serializable, Comparable<FilmItem> {
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is FilmItem) return false
+        return this.filmNameId.equals(other.filmNameId)
+    }
+
+    override fun hashCode(): Int {
+        var hash = 37
+        hash = hash * 17 + this.filmNameId.hashCode()
+        return hash
+    }
+
+    override fun compareTo(other: FilmItem): Int {
+        return if(this.filmNameId > other.filmNameId) 1 else if (this.filmNameId < other.filmNameId) -1 else 0
+    }
 }

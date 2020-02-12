@@ -2,45 +2,53 @@ package ru.kettu.moviesearcher.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.ImageView
+import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
-import androidx.recyclerview.widget.RecyclerView.VERTICAL
+import androidx.appcompat.widget.SwitchCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_UNLOCKED
+import androidx.fragment.app.Fragment
+import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_main_header.*
+import kotlinx.android.synthetic.main.content_add_favorites.*
+import kotlinx.android.synthetic.main.fragment_favourites.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.activity.FilmDetailActivity.Companion.DETAILS_INFO
-import ru.kettu.moviesearcher.adapter.MainActivityAdapter
-import ru.kettu.moviesearcher.models.FilmDetailsInfo
-import ru.kettu.moviesearcher.models.item.FavouriteItem
+import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment
+import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment.Companion.FAVOURITES_FRAGMENT
+import ru.kettu.moviesearcher.activity.fragment.FavouritesFragment.OnFavouritesFragmentAction
+import ru.kettu.moviesearcher.activity.fragment.FilmDetailsFragment
+import ru.kettu.moviesearcher.activity.fragment.FilmDetailsFragment.Companion.FILM_DETAILS_FRAGMENT
+import ru.kettu.moviesearcher.activity.fragment.FilmDetailsFragment.OnFilmDetailsAction
+import ru.kettu.moviesearcher.activity.fragment.MainFragment
+import ru.kettu.moviesearcher.activity.fragment.MainFragment.Companion.MAIN_FRAGMENT
+import ru.kettu.moviesearcher.activity.fragment.MainFragment.OnMainFragmentAction
+import ru.kettu.moviesearcher.controller.*
 import ru.kettu.moviesearcher.models.item.FilmItem
-import ru.kettu.moviesearcher.operations.initFilmItems
-import ru.kettu.moviesearcher.operations.openFavouritesActivity
-import ru.kettu.moviesearcher.operations.showAlertDialog
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
+    OnMainFragmentAction, OnFavouritesFragmentAction, OnFilmDetailsAction {
 
     lateinit var filmItems: List<FilmItem>
-    var isNightModeOn = false
     var selectedText: TextView? = null
     var selectedSpan: Int? = null
-    var favourites = TreeSet<FavouriteItem>()
+    var favourites = TreeSet<FilmItem>()
+    var toggle: ActionBarDrawerToggle? = null
+    var lastAddedToFavourite: FilmItem? = null
 
     companion object {
         const val SELECTED_SPAN = "SELECTED_SPAN"
-        const val IS_NIGHT_MODE_ON = "IS_NIGHT_MODE_ON"
         const val FILM_INFO = "FILM_INFO"
         const val ALL_FILMS = "ALL_FILMS"
         const val FAVOURITES = "FAVOURITES"
-        const val FILM_DETAILS_INFO_REQUEST_CODE = 1
-        const val FILM_FAVOURITES_REQUEST_CODE = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,29 +57,47 @@ class MainActivity : AppCompatActivity() {
         filmItems = initFilmItems()
 
         savedInstanceState?.let {
-            isNightModeOn = it.getBoolean(IS_NIGHT_MODE_ON)
             selectedSpan = it.getInt(SELECTED_SPAN)
             val bundle = it.getBundle(FAVOURITES)
-            favourites = bundle?.getSerializable(FAVOURITES) as TreeSet<FavouriteItem>
+            favourites = bundle?.getSerializable(FAVOURITES) as TreeSet<FilmItem>
         }
-        initRecycleView()
+
+        initToolbar()
+        if (supportFragmentManager.findFragmentByTag(MAIN_FRAGMENT) == null)
+            openMainFragment()
     }
 
-    fun initRecycleView() {
-        val layoutManager =
-            GridLayoutManager( this, resources.getInteger(R.integer.columns), VERTICAL, false)
-        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (position == 0) resources.getInteger(R.integer.columns) else 1 //set header width
-            }
+    private fun initToolbar() {
+        setSupportActionBar(mainToolbar)
+        supportActionBar?.setTitle(R.string.empty)
+        val toggle = ActionBarDrawerToggle(this, navigationDrawer, mainToolbar, R.string.empty, R.string.empty)
+        this.toggle = toggle
+        navigationDrawer.addDrawerListener(toggle)
+        toggle.isDrawerIndicatorEnabled = true
+        toggle.syncState()
+        navigationView.setNavigationItemSelectedListener(this)
+        val switch = navigationView.menu.findItem(R.id.mode)?.actionView?.findViewById<SwitchCompat>(R.id.modeSwitch)
+        switch?.setOnClickListener {
+            onDayNightModeSwitch(it as SwitchCompat, this)
         }
-        recycleView?.adapter = MainActivityAdapter(LayoutInflater.from(this), filmItems, isNightModeOn)
-        recycleView?.layoutManager = layoutManager
+    }
+
+    private fun openMainFragment() {
+        val bundle = Bundle()
+        bundle.putSerializable(ALL_FILMS, filmItems as ArrayList<FilmItem>)
+        bundle.putSerializable(FAVOURITES, favourites)
+        selectedSpan?.let {
+            bundle.putInt(SELECTED_SPAN, selectedSpan!!)
+        }
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, MainFragment.newInstance(bundle), MAIN_FRAGMENT)
+            .addToBackStack(MAIN_FRAGMENT)
+            .commit()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(IS_NIGHT_MODE_ON, if (mode == null) isNightModeOn else mode.isChecked)
         selectedSpan?.let {
             outState.putInt(SELECTED_SPAN, selectedSpan!!)
         }
@@ -80,33 +106,159 @@ class MainActivity : AppCompatActivity() {
         outState.putBundle(FAVOURITES, bundle)
     }
 
-    fun onFavouritesIconClick(view: View?) {
-        if (view == null || view !is ImageView) return
-        openFavouritesActivity(favourites, filmItems, FILM_FAVOURITES_REQUEST_CODE)
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            FILM_DETAILS_INFO_REQUEST_CODE -> {
-                if (RESULT_OK == (resultCode) && data != null) {
-                    val detailInfo = data.getParcelableExtra<FilmDetailsInfo>(DETAILS_INFO)
-                    detailInfo?.apply {
-                        Log.i(MainActivity::class.java.toString(), "FilmInfo: is liked - $isLiked")
-                        if (comment.isNotEmpty())
-                            Log.i(MainActivity::class.java.toString(), "FilmInfo: comment - $comment")
-                    }
-                }
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount == 1
+            && supportFragmentManager.findFragmentByTag(MAIN_FRAGMENT) != null) {
+            showAlertDialog()
+        } else {
+            supportFragmentManager.popBackStack()
+        }
+    }
+
+    override fun onAttachFragment(fragment: Fragment) {
+        when (fragment) {
+            is MainFragment -> {
+                fragment.listener = this
             }
-            FILM_FAVOURITES_REQUEST_CODE -> {
-                if (RESULT_OK == (resultCode) && data != null) {
-                    favourites = data.getSerializableExtra(FILM_INFO) as TreeSet<FavouriteItem>
-                }
+            is FavouritesFragment -> {
+                fragment.listener = this
+            }
+            is FilmDetailsFragment -> {
+                fragment.listener = this
             }
         }
     }
 
-    override fun onBackPressed() {
-        showAlertDialog()
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.mainScreen -> {
+                val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+                if (fragment !is MainFragment)
+                    openMainFragment()
+            }
+            R.id.favouritesScreen -> {
+                val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+                if (fragment !is FavouritesFragment)
+                    onPressFavourites()
+            }
+            R.id.invite -> {
+                onPressInvite()
+            }
+            R.id.exit -> {
+                showAlertDialog()
+            }
+        }
+        navigationDrawer.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    override fun onPressInvite() {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        val title = resources.getString(R.string.chooser)
+        val chooser = Intent.createChooser(intent, title)
+        intent.resolveActivity(packageManager)?.let {
+            startActivity(chooser)
+        }
+    }
+
+    override fun onPressFavourites() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, FavouritesFragment.newInstance(filmItems, favourites),
+                FAVOURITES_FRAGMENT)
+            .addToBackStack(FAVOURITES_FRAGMENT)
+            .commit()
+    }
+
+    override fun onAddToFavourites(posterId: Int, nameId: Int) {
+        val filmInfo = resources.getFilmInfoByFilmName(getString(nameId))
+        filmInfo?.let {
+            val favourite = FilmItem(posterId, nameId)
+            favourites.add(favourite)
+            lastAddedToFavourite = favourite
+            val snackbar = Snackbar.make(fragmentContainer, R.string.addToFavourite, Snackbar.LENGTH_LONG)
+                .setAction(R.string.cancel) {run {
+                    lastAddedToFavourite?.let {
+                        favourites.remove(lastAddedToFavourite as FilmItem)
+                    }
+                }}
+            snackbar.view.setBackgroundColor(getColor(R.color.colorMenuBase))
+            snackbar.show()
+        }
+    }
+
+    override fun onDetailsBtnPressed(filmName: TextView, layoutPosition: Int) {
+        filmName.setSelectedTextColor()
+        if (selectedText != null)
+            selectedText!!.setDefaultTextColor()
+
+        selectedSpan = layoutPosition
+        selectedText = filmName
+        val filmInfo = resources.getFilmInfoByFilmName(filmName.text?.toString())
+        val bundle = Bundle()
+        bundle.putParcelable(FILM_INFO, filmInfo)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer,
+                FilmDetailsFragment.newInstance(bundle), FILM_DETAILS_FRAGMENT)
+            .addToBackStack(FILM_DETAILS_FRAGMENT)
+            .commit()
+    }
+
+    override fun onRestoreMarkedFilmName(filmName: TextView, position: Int) {
+        if (selectedSpan == position) {
+            filmName.setSelectedTextColor()
+            selectedText = filmName
+        }
+    }
+
+    override fun onDeleteFilm(layoutPosition: Int, film: FilmItem) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        if (fragment is FavouritesFragment) {
+            fragment.films.remove(film)
+            fragment.notInFavourites.add(film)
+            fragment.recycleViewFav.adapter?.notifyItemRemoved(layoutPosition)
+            fragment.filmsToAddRV.adapter?.notifyItemInserted(fragment.notInFavourites.indexOf(film))
+            val toast =
+                Toast.makeText(this, R.string.deletedFromFavourite, Toast.LENGTH_SHORT)
+            toast.show()
+        }
+    }
+
+    override fun onAddFilm(film: FilmItem) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        if(fragment is FavouritesFragment) {
+            fragment.films.add(film)
+            val elemPosition = fragment.notInFavourites.indexOf(film)
+            fragment.notInFavourites.remove(film)
+            fragment.recycleViewFav.adapter?.notifyItemInserted(fragment.films.indexOf(film))
+            fragment.filmsToAddRV.adapter?.notifyItemRemoved(elemPosition)
+        }
+    }
+
+    override fun onFragmentCreatedInitToolbar(fragment: Fragment) {
+        if (fragment is FilmDetailsFragment) {
+            mainToolbar.visibility = GONE
+            navigationDrawer.setDrawerLockMode(LOCK_MODE_LOCKED_CLOSED)
+        } else {
+            if (mainToolbar.visibility.equals(GONE)) {
+                mainToolbar.visibility = VISIBLE
+                setSupportActionBar(mainToolbar)
+                val newToggle = ActionBarDrawerToggle(this, navigationDrawer, mainToolbar, R.string.empty, R.string.empty)
+                this.toggle = newToggle
+                navigationDrawer.addDrawerListener(newToggle)
+            }
+            (toggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = true
+            supportActionBar?.title = getString(R.string.empty)
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            navigationDrawer.setDrawerLockMode(LOCK_MODE_UNLOCKED)
+        }
+        (toggle as ActionBarDrawerToggle).syncState()
     }
 }
