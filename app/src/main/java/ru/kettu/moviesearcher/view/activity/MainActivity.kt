@@ -41,12 +41,14 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
     var favourites = LinkedHashSet<FilmItem>()
     var toggle: ActionBarDrawerToggle? = null
     var lastAddedToFavourite: FilmItem? = null
+    var currentFragmentName: String? = MAIN_FRAGMENT
 
     companion object {
         const val SELECTED_SPAN = "SELECTED_SPAN"
         const val FILM_INFO = "FILM_INFO"
         const val ALL_FILMS = "ALL_FILMS"
         const val FAVOURITES = "FAVOURITES"
+        const val CURRENT_FRAGMENT_NAME = "CURRENT_FRAGMENT_NAME"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,12 +63,13 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
             selectedSpan = it.getInt(SELECTED_SPAN)
             val bundle = it.getBundle(FILM_INFO)
             favourites = bundle?.getSerializable(FAVOURITES) as LinkedHashSet<FilmItem>
-            filmItems = bundle?.getSerializable(ALL_FILMS) as LinkedHashSet<FilmItem>
+            filmItems = bundle.getSerializable(ALL_FILMS) as LinkedHashSet<FilmItem>
+            currentFragmentName = bundle.getString(CURRENT_FRAGMENT_NAME)
         }
 
         initToolbar()
-        if (supportFragmentManager.findFragmentByTag(MAIN_FRAGMENT) == null)
-            openMainFragment()
+        if (supportFragmentManager.findFragmentByTag(currentFragmentName) == null)
+            openFragment()
     }
 
     private fun initToolbar() {
@@ -84,7 +87,15 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         }
     }
 
+    private fun openFragment() {
+        when(currentFragmentName) {
+            MAIN_FRAGMENT -> openMainFragment()
+            FAVOURITES_FRAGMENT -> openFavouritesFragment()
+        }
+    }
+
     private fun openMainFragment() {
+        currentFragmentName = MAIN_FRAGMENT
         supportFragmentManager
             .loadFragmentWithoutBackStack(R.id.fragmentContainer,
                 MainFilmListFragment.newInstance(selectedSpan), MAIN_FRAGMENT)
@@ -98,6 +109,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         val bundle = Bundle()
         bundle.putSerializable(FAVOURITES, favourites)
         bundle.putSerializable(ALL_FILMS, filmItems)
+        bundle.putString(CURRENT_FRAGMENT_NAME, currentFragmentName)
         outState.putBundle(FILM_INFO, bundle)
     }
 
@@ -138,7 +150,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
             R.id.favouritesScreen -> {
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
                 if (fragment !is FavouritesFragment)
-                    onPressFavourites()
+                    openFavouritesFragment()
             }
             R.id.invite -> {
                 onPressInvite()
@@ -165,7 +177,8 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         }
     }
 
-    override fun onPressFavourites() {
+    override fun openFavouritesFragment() {
+        currentFragmentName = FAVOURITES_FRAGMENT
         supportFragmentManager
             .loadFragmentWithoutBackStack(R.id.fragmentContainer,
                 FavouritesFragment.newInstance(filmItems, favourites), FAVOURITES_FRAGMENT)
@@ -193,11 +206,9 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
 
         selectedSpan = layoutPosition
         selectedText = filmName
-        val bundle = Bundle()
-        bundle.putSerializable(FILM_INFO, item)
         supportFragmentManager
             .loadFragmentWithBackStack(R.id.fragmentContainer,
-                FilmDetailsFragment.newInstance(bundle), FILM_DETAILS_FRAGMENT)
+                FilmDetailsFragment.newInstance(item), FILM_DETAILS_FRAGMENT)
     }
 
     override fun onRestoreMarkedFilmName(filmName: TextView, position: Int) {

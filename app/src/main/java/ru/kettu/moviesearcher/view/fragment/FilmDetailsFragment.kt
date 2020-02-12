@@ -20,8 +20,10 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
         const val FILM_DETAILS_FRAGMENT = "FILM_DETAILS_FRAGMENT"
         const val FILM_INFO = "FILM_INFO"
 
-        fun newInstance(bundle: Bundle): FilmDetailsFragment {
+        fun newInstance(item: FilmItem): FilmDetailsFragment {
             val fragment = FilmDetailsFragment()
+            val bundle = Bundle()
+            bundle.putSerializable(FILM_INFO, item)
             fragment.arguments = bundle
             return fragment
         }

@@ -82,7 +82,7 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
 
         fun onPressInvite()
 
-        fun onPressFavourites()
+        fun openFavouritesFragment()
 
         fun onAddToFavourites(item: FilmItem)
 

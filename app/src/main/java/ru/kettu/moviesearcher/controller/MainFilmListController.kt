@@ -23,7 +23,7 @@ import ru.kettu.moviesearcher.network.RetrofitApp
 fun MainFilmListFragment.initRecycleView() {
     circle_progress_bar.visibility = View.VISIBLE
     val layoutManager =
-        GridLayoutManager( this.view?.context, resources.getInteger(R.integer.columns), RecyclerView.VERTICAL, false)
+        GridLayoutManager(this.view?.context, resources.getInteger(R.integer.columns), RecyclerView.VERTICAL, false)
     layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
         override fun getSpanSize(position: Int): Int {
             return if (position == 0) resources.getInteger(R.integer.columns) else 1 //set header width
@@ -32,7 +32,7 @@ fun MainFilmListFragment.initRecycleView() {
     initFirstFilmLoading(this, layoutManager)
 }
 
-fun initFirstFilmLoading(fragment: MainFilmListFragment, layoutManager: LayoutManager) {
+private fun initFirstFilmLoading(fragment: MainFilmListFragment, layoutManager: LayoutManager) {
     if (fragment.filmItems.isEmpty()) {
         val resources = fragment.resources
         val movieDbApi = RetrofitApp.theMovieDbApi
@@ -54,7 +54,7 @@ fun getFilmsFromPage(fragment: MainFilmListFragment, page: Int, layoutManager: L
     loadFilmList(fragment, call, layoutManager)
 }
 
-fun loadFilmList(fragment: MainFilmListFragment, call: Call<FilmListResponse>?, layoutManager: LayoutManager?) {
+private fun loadFilmList(fragment: MainFilmListFragment, call: Call<FilmListResponse>?, layoutManager: LayoutManager?) {
     val currentView = fragment.view
     val resources = fragment.resources
     call?.enqueue(object : Callback<FilmListResponse> {

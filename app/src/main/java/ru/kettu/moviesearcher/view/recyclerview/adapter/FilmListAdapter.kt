@@ -16,21 +16,9 @@ class FilmListAdapter (val inflater: LayoutInflater, val items: Set<FilmItem>, v
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_FILMS ->
-                FilmViewHolder(
-                    inflater.inflate(
-                        R.layout.item_film,
-                        parent,
-                        false
-                    )
-                )
+                FilmViewHolder(inflater.inflate(R.layout.item_film, parent, false))
             else ->
-                MainSectionViewHolder(
-                    inflater.inflate(
-                        R.layout.item_section,
-                        parent,
-                        false
-                    )
-                )
+                MainSectionViewHolder(inflater.inflate(R.layout.item_section, parent, false))
         }
     }
 

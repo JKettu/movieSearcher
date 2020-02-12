@@ -6,18 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.content_add_favorites.*
-import kotlinx.android.synthetic.main.fragment_favourites.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.controller.initNotInFavourites
+import ru.kettu.moviesearcher.controller.initFirstFavouritesLoading
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.view.recyclerview.adapter.AddToFavouritesAdapter
-import ru.kettu.moviesearcher.view.recyclerview.adapter.FavouritesAdapter
 import java.util.*
+import kotlin.collections.LinkedHashSet
 
 class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
 
@@ -27,6 +24,7 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
         const val FAVOURITES_FRAGMENT = "FAVOURITES_FRAGMENT"
         const val ALL_FILMS = "ALL_FILMS"
         const val FAVOURITES = "FAVOURITES"
+        const val FAV_ITEMS_LOADED = "FAV_ITEMS_LOADED"
 
         fun newInstance(allFilms: Set<FilmItem>, films: Set<FilmItem>): FavouritesFragment {
             val fragment = FavouritesFragment()
@@ -38,17 +36,23 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
         }
     }
 
-    lateinit var films: LinkedHashSet<FilmItem>
+    lateinit var favourites: LinkedHashSet<FilmItem>
+    var favouritesLoaded = LinkedHashSet<FilmItem>()
     var notInFavourites = LinkedHashSet<FilmItem>()
     lateinit var allFilms: LinkedHashSet<FilmItem>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val currentView = getView()
-        films = arguments?.get(FAVOURITES) as LinkedHashSet<FilmItem>
+        favourites = arguments?.get(FAVOURITES) as LinkedHashSet<FilmItem>
         allFilms = arguments?.get(ALL_FILMS) as LinkedHashSet<FilmItem>
-        resources.initNotInFavourites(allFilms, films, notInFavourites)
-        initFavouritesRecyclerView(currentView?.context)
+        savedInstanceState?.let {
+            favouritesLoaded = it.getSerializable(FAV_ITEMS_LOADED) as LinkedHashSet<FilmItem>
+        }
+
+        //resources.initNotInFavourites(allFilms, favourites, notInFavourites)
+        initFirstFavouritesLoading(this, favourites)
+
         initAddFavouritesRecyclerView(currentView?.context)
         listener?.onFragmentCreatedInitToolbar(this)
         if (activity is AppCompatActivity) {
@@ -57,18 +61,16 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
         }
     }
 
-    private fun initFavouritesRecyclerView(context: Context?) {
+    /*private fun initFavouritesRecyclerView(context: Context?) {
         val layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val itemDecorator = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
         itemDecorator.setDrawable(resources.getDrawable(R.drawable.separator_line))
         recycleViewFav?.addItemDecoration(itemDecorator)
         recycleViewFav?.adapter =
-            FavouritesAdapter(
-                LayoutInflater.from(context), films, listener
-            )
+            FavouritesAdapter(LayoutInflater.from(context), favourites, listener)
         recycleViewFav?.layoutManager = layoutManager
-    }
+    }*/
 
     private fun initAddFavouritesRecyclerView(context: Context?) {
         val layoutManager =
@@ -79,6 +81,10 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
                 LayoutInflater.from(context), notInFavourites, listener
             )
         filmsToAddRV?.layoutManager = layoutManager
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(FAV_ITEMS_LOADED, favouritesLoaded)
     }
 
     interface OnFavouritesFragmentAction {

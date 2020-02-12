@@ -13,13 +13,7 @@ class AddToFavouritesAdapter(val inflater: LayoutInflater, val addItems: LinkedH
                              val listener: OnFavouritesFragmentAction?):
     RecyclerView.Adapter<AddFavouriteViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddFavouriteViewHolder {
-        return AddFavouriteViewHolder(
-            inflater.inflate(
-                R.layout.item_add_to_favourite,
-                parent,
-                false
-            )
-        )
+        return AddFavouriteViewHolder(inflater.inflate(R.layout.item_add_to_favourite, parent, false))
     }
 
     override fun getItemCount() = addItems.size
