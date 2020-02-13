@@ -2,6 +2,7 @@ package ru.kettu.moviesearcher.controller
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.util.Log
 import android.view.View.*
 import kotlinx.android.synthetic.main.fragment_film_detail.*
 import retrofit2.Call
@@ -72,7 +73,7 @@ fun initFilmDetailLoading(filmId: Int, fragment: FilmDetailsFragment) {
         }
 
         override fun onFailure(call: Call<FilmDetails>, t: Throwable) {
-            System.out.println(t.stackTrace)
+            Log.e("Details:loadFilm",t.localizedMessage, t)
             fragment.circle_progress_bar.visibility = INVISIBLE
         }
     })

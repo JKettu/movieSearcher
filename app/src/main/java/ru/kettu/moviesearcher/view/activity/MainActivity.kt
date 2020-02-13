@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         currentFragmentName = FAVOURITES_FRAGMENT
         supportFragmentManager
             .loadFragmentWithoutBackStack(R.id.fragmentContainer,
-                FavouritesFragment.newInstance(filmItems, favourites), FAVOURITES_FRAGMENT)
+                FavouritesFragment.newInstance(favourites), FAVOURITES_FRAGMENT)
     }
 
     override fun onAddToFavourites(item: FilmItem) {

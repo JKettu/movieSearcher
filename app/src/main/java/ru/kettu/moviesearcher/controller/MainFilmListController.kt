@@ -1,9 +1,9 @@
 package ru.kettu.moviesearcher.controller
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -12,12 +12,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.view.fragment.MainFilmListFragment
-import ru.kettu.moviesearcher.view.recyclerview.adapter.FilmListAdapter
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.network.FilmDetails
 import ru.kettu.moviesearcher.models.network.FilmListResponse
 import ru.kettu.moviesearcher.network.RetrofitApp
+import ru.kettu.moviesearcher.view.fragment.MainFilmListFragment
+import ru.kettu.moviesearcher.view.recyclerview.adapter.FilmListAdapter
 
 
 fun MainFilmListFragment.initRecycleView() {
@@ -46,11 +46,9 @@ private fun initFirstFilmLoading(fragment: MainFilmListFragment, layoutManager: 
     }
 }
 
-fun getFilmsFromPage(fragment: MainFilmListFragment, page: Int, layoutManager: LayoutManager?) {
+fun getAllFilmsList(fragment: MainFilmListFragment, page: Int, layoutManager: LayoutManager?) {
     if (fragment.currentLoadedPage == page) return
-    val resources = fragment.resources
-    val movieDbApi = RetrofitApp.theMovieDbApi
-    val call = movieDbApi?.getNowPlayingFilms(resources.configuration.locale.language, page)
+    val call = getFilmsFromPage(fragment.resources, page)
     loadFilmList(fragment, call, layoutManager)
 }
 
@@ -83,9 +81,8 @@ private fun loadFilmList(fragment: MainFilmListFragment, call: Call<FilmListResp
         }
 
         override fun onFailure(call: Call<FilmListResponse>, t: Throwable) {
-            System.out.println(t.localizedMessage)
+            Log.e("Main:loadFilmList",t.localizedMessage, t)
             fragment.circle_progress_bar.visibility = INVISIBLE
-            TODO("logging")
         }
     })
 }

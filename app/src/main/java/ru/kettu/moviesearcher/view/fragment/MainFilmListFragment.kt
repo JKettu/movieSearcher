@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.controller.getFilmsFromPage
+import ru.kettu.moviesearcher.controller.getAllFilmsList
 import ru.kettu.moviesearcher.controller.initRecycleView
 import ru.kettu.moviesearcher.models.item.FilmItem
 import java.util.*
@@ -16,6 +16,10 @@ import java.util.*
 class MainFilmListFragment: Fragment(R.layout.fragment_main) {
 
     var listener: OnMainFragmentAction? = null
+    var filmItems = LinkedHashSet<FilmItem>()
+    var selectedSpan: Int? = null
+    var favourites = LinkedHashSet<FilmItem>()
+    var currentLoadedPage = 1
 
     companion object {
         const val MAIN_FRAGMENT = "MAIN_FRAGMENT"
@@ -36,11 +40,6 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
         }
     }
 
-    var filmItems = LinkedHashSet<FilmItem>()
-    var selectedSpan: Int? = null
-    var favourites = LinkedHashSet<FilmItem>()
-    var currentLoadedPage = 1
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let {
@@ -58,7 +57,7 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if ((recycleView?.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
                     == filmItems.size) {
-                    getFilmsFromPage(this@MainFilmListFragment, currentLoadedPage + 1, recyclerView.layoutManager)
+                    getAllFilmsList(this@MainFilmListFragment, currentLoadedPage + 1, recyclerView.layoutManager)
                 }
             }
         })

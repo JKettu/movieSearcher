@@ -11,10 +11,11 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
+import retrofit2.Call
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.constants.NetworkConstants.POSTER_PREFIX
-import ru.kettu.moviesearcher.models.item.FilmItem
-import java.util.*
+import ru.kettu.moviesearcher.models.network.FilmListResponse
+import ru.kettu.moviesearcher.network.RetrofitApp
 
 fun TextView.setDefaultTextColor() {
     val colorAccent = resources.getColor(R.color.colorAccent)
@@ -26,15 +27,9 @@ fun TextView.setSelectedTextColor() {
     this.setTextColor(colorAccentDark)
 }
 
-fun Resources.initNotInFavourites(allFilms: LinkedHashSet<FilmItem>?,
-                                  films: LinkedHashSet<FilmItem>?, notInFilms: LinkedHashSet<FilmItem>) {
-    if (films == null) return
-    allFilms?.forEach { film ->
-        run {
-            if (!films.contains(film))
-                notInFilms.add(film)
-        }
-    }
+fun getFilmsFromPage(resources: Resources, page: Int): Call<FilmListResponse>? {
+    val movieDbApi = RetrofitApp.theMovieDbApi
+    return movieDbApi?.getNowPlayingFilms(resources.configuration.locale.language, page)
 }
 
 fun onDayNightModeSwitch(mode: SwitchCompat, activity: Activity) {

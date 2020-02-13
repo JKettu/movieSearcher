@@ -1,8 +1,6 @@
 package ru.kettu.moviesearcher.view.fragment
 
-import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -10,50 +8,55 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.content_add_favorites.*
 import ru.kettu.moviesearcher.R
+import ru.kettu.moviesearcher.controller.getNotInFavouritesList
 import ru.kettu.moviesearcher.controller.initFirstFavouritesLoading
+import ru.kettu.moviesearcher.controller.initFirstNotInFavouritesLoading
 import ru.kettu.moviesearcher.models.item.FilmItem
-import ru.kettu.moviesearcher.view.recyclerview.adapter.AddToFavouritesAdapter
-import java.util.*
-import kotlin.collections.LinkedHashSet
 
 class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
 
     var listener: OnFavouritesFragmentAction? = null
+    lateinit var favourites: LinkedHashSet<FilmItem>
+    var favouritesLoaded = LinkedHashSet<FilmItem>()
+    var notInFavourites = LinkedHashSet<FilmItem>()
+    var currentLoadedPage = 1
 
     companion object {
         const val FAVOURITES_FRAGMENT = "FAVOURITES_FRAGMENT"
-        const val ALL_FILMS = "ALL_FILMS"
+        const val NOT_IN_FAVOURITES = "NOT_IN_FAVOURITES"
         const val FAVOURITES = "FAVOURITES"
         const val FAV_ITEMS_LOADED = "FAV_ITEMS_LOADED"
+        const val CURRENT_LOADED_PAGE = "CURRENT_LOADED_PAGE"
 
-        fun newInstance(allFilms: Set<FilmItem>, films: Set<FilmItem>): FavouritesFragment {
+        fun newInstance(films: Set<FilmItem>): FavouritesFragment {
             val fragment = FavouritesFragment()
             val bundle = Bundle()
-            bundle.putSerializable(ALL_FILMS, allFilms as LinkedHashSet<FilmItem>)
             bundle.putSerializable(FAVOURITES, films as LinkedHashSet<FilmItem>)
             fragment.arguments = bundle
             return fragment
         }
     }
 
-    lateinit var favourites: LinkedHashSet<FilmItem>
-    var favouritesLoaded = LinkedHashSet<FilmItem>()
-    var notInFavourites = LinkedHashSet<FilmItem>()
-    lateinit var allFilms: LinkedHashSet<FilmItem>
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val currentView = getView()
         favourites = arguments?.get(FAVOURITES) as LinkedHashSet<FilmItem>
-        allFilms = arguments?.get(ALL_FILMS) as LinkedHashSet<FilmItem>
         savedInstanceState?.let {
             favouritesLoaded = it.getSerializable(FAV_ITEMS_LOADED) as LinkedHashSet<FilmItem>
+            currentLoadedPage = it.getInt(CURRENT_LOADED_PAGE)
+            notInFavourites = it.getSerializable(NOT_IN_FAVOURITES) as LinkedHashSet<FilmItem>
         }
 
-        //resources.initNotInFavourites(allFilms, favourites, notInFavourites)
         initFirstFavouritesLoading(this, favourites)
+        filmsToAddRV?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if ((recyclerView.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+                    == notInFavourites.size - 1) {
+                    getNotInFavouritesList(this@FavouritesFragment, currentLoadedPage + 1)
+                }
+            }
+        })
 
-        initAddFavouritesRecyclerView(currentView?.context)
+        initFirstNotInFavouritesLoading(this)
         listener?.onFragmentCreatedInitToolbar(this)
         if (activity is AppCompatActivity) {
             val toolbar = (activity as AppCompatActivity).supportActionBar
@@ -61,30 +64,10 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
         }
     }
 
-    /*private fun initFavouritesRecyclerView(context: Context?) {
-        val layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val itemDecorator = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        itemDecorator.setDrawable(resources.getDrawable(R.drawable.separator_line))
-        recycleViewFav?.addItemDecoration(itemDecorator)
-        recycleViewFav?.adapter =
-            FavouritesAdapter(LayoutInflater.from(context), favourites, listener)
-        recycleViewFav?.layoutManager = layoutManager
-    }*/
-
-    private fun initAddFavouritesRecyclerView(context: Context?) {
-        val layoutManager =
-            GridLayoutManager( context, resources.getInteger(R.integer.columns),
-                RecyclerView.VERTICAL, false)
-        filmsToAddRV?.adapter =
-            AddToFavouritesAdapter(
-                LayoutInflater.from(context), notInFavourites, listener
-            )
-        filmsToAddRV?.layoutManager = layoutManager
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(FAV_ITEMS_LOADED, favouritesLoaded)
+        outState.putInt(CURRENT_LOADED_PAGE, currentLoadedPage)
+        outState.putSerializable(NOT_IN_FAVOURITES, notInFavourites)
     }
 
     interface OnFavouritesFragmentAction {
