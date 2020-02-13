@@ -85,6 +85,7 @@ private fun loadFilmList(fragment: MainFilmListFragment, call: Call<FilmListResp
         override fun onFailure(call: Call<FilmListResponse>, t: Throwable) {
             System.out.println(t.localizedMessage)
             fragment.circle_progress_bar.visibility = INVISIBLE
+            TODO("logging")
         }
     })
 }
