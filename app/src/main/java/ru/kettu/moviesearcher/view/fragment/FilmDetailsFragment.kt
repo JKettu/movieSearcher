@@ -42,13 +42,13 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
         }
 
         initFilmDetailLoading(filmInfo.id, this)
-        listener?.onFragmentCreatedInitToolbar(this)
         detailAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             run{
                 currentOffset = setPosterRoundImgAnimation(verticalOffset, currentOffset)
             }
 
         })
+        listener?.onFragmentCreatedInitToolbar(this)
     }
 
     interface OnFilmDetailsAction {

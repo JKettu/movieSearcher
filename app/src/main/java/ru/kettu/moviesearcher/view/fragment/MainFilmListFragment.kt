@@ -61,6 +61,7 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
                 }
             }
         })
+        listener?.onFragmentCreatedInitToolbar(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

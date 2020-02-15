@@ -13,7 +13,7 @@ import ru.kettu.moviesearcher.controller.initFirstFavouritesLoading
 import ru.kettu.moviesearcher.controller.initFirstNotInFavouritesLoading
 import ru.kettu.moviesearcher.models.item.FilmItem
 
-class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
+class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
 
     var listener: OnFavouritesFragmentAction? = null
     lateinit var favourites: LinkedHashSet<FilmItem>
@@ -47,7 +47,7 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
         }
 
         initFirstFavouritesLoading(this, favourites)
-        filmsToAddRV?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        filmsToAddRV?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if ((recyclerView.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
                     == notInFavourites.size - 1) {
@@ -57,11 +57,11 @@ class FavouritesFragment: Fragment(R.layout.fragment_favourites) {
         })
 
         initFirstNotInFavouritesLoading(this)
-        listener?.onFragmentCreatedInitToolbar(this)
         if (activity is AppCompatActivity) {
             val toolbar = (activity as AppCompatActivity).supportActionBar
             toolbar?.title = (getString(R.string.favouritesFragmentName))
         }
+        listener?.onFragmentCreatedInitToolbar(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

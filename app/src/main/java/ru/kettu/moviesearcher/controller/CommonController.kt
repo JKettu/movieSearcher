@@ -63,3 +63,14 @@ fun FragmentManager.loadFragmentWithBackStack(fragmentId: Int, fragment: Fragmen
         .addToBackStack(name)
         .commit()
 }
+
+fun FragmentManager.refreshOpenedFragment() {
+    val fragment = this.findFragmentById(R.id.fragmentContainer)
+    fragment?.let {
+        this
+            .beginTransaction()
+            .detach(it)
+            .attach(it)
+            .commit()
+    }
+}

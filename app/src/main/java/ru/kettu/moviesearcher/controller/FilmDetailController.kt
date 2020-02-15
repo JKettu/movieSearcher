@@ -4,6 +4,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.util.Log
 import android.view.View.*
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_film_detail.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -75,6 +76,7 @@ fun initFilmDetailLoading(filmId: Int, fragment: FilmDetailsFragment) {
         override fun onFailure(call: Call<FilmDetails>, t: Throwable) {
             Log.e("Details:loadFilm",t.localizedMessage, t)
             fragment.circle_progress_bar.visibility = INVISIBLE
+            Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_LONG).show()
         }
     })
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.INVISIBLE
+import android.widget.Toast
 import androidx.core.view.size
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -47,7 +48,8 @@ fun deleteFromFavourites(fragment: FavouritesFragment, film: FilmItem, layoutPos
 }
 
 fun initFirstFavouritesLoading(fragment: FavouritesFragment, favourites: Set<FilmItem>) {
-    initFavouritesRecyclerView(fragment, fragment.view?.context)
+    if (fragment.recycleViewFav.layoutManager == null)
+        initFavouritesRecyclerView(fragment, fragment.view?.context)
     if (fragment.favourites.isEmpty()
             || fragment.favourites.size == fragment.favouritesLoaded.size
             || fragment.favouritesLoaded.size >= FAVOURITES_LOAD_AMOUNT) {
@@ -94,7 +96,8 @@ private fun initFavouritesRecyclerView(fragment: FavouritesFragment, context: Co
 }
 
 fun initFirstNotInFavouritesLoading(fragment: FavouritesFragment) {
-    initNotInFavouritesRecyclerView(fragment, fragment.view?.context)
+    if (fragment.filmsToAddRV.layoutManager == null)
+        initNotInFavouritesRecyclerView(fragment, fragment.view?.context)
     if (fragment.notInFavourites.isNotEmpty()) {
         fragment.circle_progress_bar.visibility = INVISIBLE
         return
@@ -121,6 +124,7 @@ private fun loadFilm(fragment: FavouritesFragment, call: Call<FilmDetails>?) {
         override fun onFailure(call: Call<FilmDetails>, t: Throwable) {
             fragment.circle_progress_bar.visibility = INVISIBLE
             Log.e("Favourites:loadFilm",t.localizedMessage, t)
+            Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_LONG).show()
         }
 
         override fun onResponse(call: Call<FilmDetails>, response: Response<FilmDetails>) {
@@ -141,17 +145,21 @@ private fun loadFilmList(fragment: FavouritesFragment, call: Call<FilmListRespon
         override fun onFailure(call: Call<FilmListResponse>, t: Throwable) {
             fragment.circle_progress_bar.visibility = INVISIBLE
             Log.e("Favourites:loadFilmList",t.localizedMessage, t)
+            Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_LONG).show()
         }
 
         override fun onResponse(call: Call<FilmListResponse>, response: Response<FilmListResponse>) {
             val films: List<FilmDetails>? = response.body()?.results
             var itemsAddedAmount = 0
-            films?.forEach {
-                val currentFilm = FilmItem(it.id, it.title, it.overview, it.posterPath)
-                if (!fragment.favourites.contains(currentFilm)) {
-                    fragment.notInFavourites.add(currentFilm)
-                    fragment.filmsToAddRV?.adapter?.notifyItemInserted(fragment.notInFavourites.size - 1)
-                    itemsAddedAmount++
+            fragment.filmsToAddRV?.adapter?.let {
+                films?.forEach {film -> run {
+                        val currentFilm = FilmItem(film.id, film.title, film.overview, film.posterPath)
+                        if (!fragment.favourites.contains(currentFilm)) {
+                            fragment.notInFavourites.add(currentFilm)
+                            it.notifyItemInserted(fragment.notInFavourites.size - 1)
+                            itemsAddedAmount++
+                        }
+                    }
                 }
             }
             fragment.currentLoadedPage++

@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -32,7 +33,7 @@ fun MainFilmListFragment.initRecycleView() {
     initFirstFilmLoading(this, layoutManager)
 }
 
-private fun initFirstFilmLoading(fragment: MainFilmListFragment, layoutManager: LayoutManager) {
+fun initFirstFilmLoading(fragment: MainFilmListFragment, layoutManager: LayoutManager) {
     if (fragment.filmItems.isEmpty()) {
         val resources = fragment.resources
         val movieDbApi = RetrofitApp.theMovieDbApi
@@ -63,7 +64,7 @@ private fun loadFilmList(fragment: MainFilmListFragment, call: Call<FilmListResp
             }
 
             films?.let {
-                if (response.body()?.page == 1) {
+                if (fragment.recycleView?.adapter == null) {
                     fragment.recycleView?.adapter =
                         FilmListAdapter(LayoutInflater.from(currentView?.context), fragment.filmItems, fragment.listener, resources)
                     fragment.recycleView?.layoutManager = layoutManager
@@ -76,13 +77,13 @@ private fun loadFilmList(fragment: MainFilmListFragment, call: Call<FilmListResp
             }
 
             fragment.listener?.onItemsInitFinish(fragment.filmItems)
-            fragment.listener?.onFragmentCreatedInitToolbar(fragment)
             fragment.circle_progress_bar.visibility = INVISIBLE
         }
 
         override fun onFailure(call: Call<FilmListResponse>, t: Throwable) {
             Log.e("Main:loadFilmList",t.localizedMessage, t)
             fragment.circle_progress_bar.visibility = INVISIBLE
+            Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_LONG).show()
         }
     })
 }

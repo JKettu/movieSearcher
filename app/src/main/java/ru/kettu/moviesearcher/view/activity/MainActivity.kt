@@ -3,16 +3,12 @@ package ru.kettu.moviesearcher.view.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED
-import androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_UNLOCKED
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import com.google.android.material.snackbar.Snackbar
@@ -70,6 +66,11 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         initToolbar()
         if (supportFragmentManager.findFragmentByTag(currentFragmentName) == null)
             openFragment()
+
+        main_swipe_refresh.setOnRefreshListener {
+            supportFragmentManager.refreshOpenedFragment()
+            main_swipe_refresh.isRefreshing = false
+        }
     }
 
     private fun initToolbar() {
@@ -222,9 +223,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
         if (fragment is FavouritesFragment) {
             deleteFromFavourites(fragment, film, layoutPosition)
-            val toast =
-                Toast.makeText(this, R.string.deletedFromFavourite, Toast.LENGTH_SHORT)
-            toast.show()
+            Toast.makeText(this, R.string.deletedFromFavourite, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -236,22 +235,10 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
     }
 
     override fun onFragmentCreatedInitToolbar(fragment: Fragment) {
-        if (fragment is FilmDetailsFragment) {
-            mainToolbar.visibility = GONE
-            navigationDrawer.setDrawerLockMode(LOCK_MODE_LOCKED_CLOSED)
-        } else {
-            if (mainToolbar.visibility.equals(GONE)) {
-                mainToolbar.visibility = VISIBLE
-                setSupportActionBar(mainToolbar)
-                val newToggle = ActionBarDrawerToggle(this, navigationDrawer, mainToolbar, R.string.empty, R.string.empty)
-                this.toggle = newToggle
-                navigationDrawer.addDrawerListener(newToggle)
-            }
-            (toggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = true
-            supportActionBar?.title = getString(R.string.empty)
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            navigationDrawer.setDrawerLockMode(LOCK_MODE_UNLOCKED)
+        when(fragment) {
+            is FavouritesFragment -> main_swipe_refresh.isEnabled = false
+            else -> main_swipe_refresh.isEnabled = true
         }
-        (toggle as ActionBarDrawerToggle).syncState()
+        updateToolbarParameters(fragment)
     }
 }
