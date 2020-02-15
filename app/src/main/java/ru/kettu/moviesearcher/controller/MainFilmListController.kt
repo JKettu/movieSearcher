@@ -16,6 +16,7 @@ import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.network.FilmDetails
 import ru.kettu.moviesearcher.models.network.FilmListResponse
+import ru.kettu.moviesearcher.models.network.Genres
 import ru.kettu.moviesearcher.network.RetrofitApp
 import ru.kettu.moviesearcher.view.fragment.MainFilmListFragment
 import ru.kettu.moviesearcher.view.recyclerview.adapter.FilmListAdapter
@@ -60,7 +61,9 @@ private fun loadFilmList(fragment: MainFilmListFragment, call: Call<FilmListResp
         override fun onResponse(call: Call<FilmListResponse>, response: Response<FilmListResponse>) {
             val films: List<FilmDetails>? = response.body()?.results
             films?.forEach {
-                fragment.filmItems.add(FilmItem(it.id, it.title, it.overview, it.posterPath))
+                it.genres = fillGenres(it.genres, it.genreIds)
+                fragment.filmItems.add(FilmItem(it.id, it.title, it.overview, it.posterPath,
+                    it.voteAverage.toString(), it.genres, it.releaseDate))
             }
 
             films?.let {

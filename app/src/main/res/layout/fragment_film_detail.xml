@@ -65,6 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
 
@@ -73,12 +74,51 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:justificationMode="inter_word"
                 android:paddingBottom="10dp"
-                android:textSize="15sp"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/filmRating"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Test" />
+
+            <TextView
+                android:id="@+id/filmRating"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:drawableStart="@drawable/rating"
+                android:paddingBottom="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/filmGenres"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filmTitle"
+                tools:text="Test" />
+
+            <TextView
+                android:id="@+id/filmGenres"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:paddingBottom="40dp"
+                app:layout_constraintBottom_toTopOf="@+id/overview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filmRating"
+                tools:text="Test" />
+
+            <TextView
+                android:id="@+id/overview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/overview"
                 app:layout_constraintBottom_toTopOf="@+id/filmDesc"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/filmGenres" />
 
             <TextView
                 android:id="@+id/filmDesc"
@@ -89,7 +129,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/filmTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/overview"
+                tools:text="Test" />
 
             <ProgressBar
                 android:id="@+id/circle_progress_bar"

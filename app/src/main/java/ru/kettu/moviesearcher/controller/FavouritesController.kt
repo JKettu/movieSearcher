@@ -129,7 +129,8 @@ private fun loadFilm(fragment: FavouritesFragment, call: Call<FilmDetails>?) {
 
         override fun onResponse(call: Call<FilmDetails>, response: Response<FilmDetails>) {
             response.body()?.let { film ->
-                val newFav = FilmItem(film.id, film.title, film.overview, film.posterPath)
+                val newFav = FilmItem(film.id, film.title, film.overview, film.posterPath,
+                    film.voteAverage.toString(), film.genres, film.releaseDate)
                 fragment.favouritesLoaded.add(newFav)
                 fragment.recycleViewFav.adapter?.let {
                     it.notifyItemInserted(it.itemCount)
@@ -153,7 +154,9 @@ private fun loadFilmList(fragment: FavouritesFragment, call: Call<FilmListRespon
             var itemsAddedAmount = 0
             fragment.filmsToAddRV?.adapter?.let {
                 films?.forEach {film -> run {
-                        val currentFilm = FilmItem(film.id, film.title, film.overview, film.posterPath)
+                        film.genres = fillGenres(film.genres, film.genreIds)
+                        val currentFilm = FilmItem(film.id, film.title, film.overview, film.posterPath,
+                            film.voteAverage.toString(), film.genres, film.releaseDate)
                         if (!fragment.favourites.contains(currentFilm)) {
                             fragment.notInFavourites.add(currentFilm)
                             it.notifyItemInserted(fragment.notInFavourites.size - 1)

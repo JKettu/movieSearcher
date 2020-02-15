@@ -11,6 +11,7 @@
     <ImageView
         android:id="@+id/addToFavPoster"
         style="@style/posterStyle"
+        android:minHeight="178dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

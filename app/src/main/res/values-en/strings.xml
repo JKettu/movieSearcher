@@ -21,6 +21,8 @@
     <string name="cancel">Cancel</string>
     <string name="favouritesFragmentName">Favourites</string>
     <string name="filmLoadingFailed">Movies loading failed. Try again later.</string>
+    <string name="overview">Overview</string>
+    <string name="genres">Genre: </string>
 
     <string name="mainActivityTitle">Film\'s list</string>
 </resources>

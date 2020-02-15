@@ -12,9 +12,21 @@
     <ImageView
         android:id="@+id/poster"
         style="@style/posterStyle"
+        android:minHeight="178dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:minHeight="178dp"/>
+        tools:srcCompat="@drawable/test_poster" />
+
+    <TextView
+        android:id="@+id/filmRate"
+        style="@style/filmNameStyle"
+        android:drawableStart="@drawable/rating"
+        app:layout_constraintBottom_toTopOf="@+id/filmName"
+        app:layout_constraintEnd_toEndOf="@+id/detailBtn"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/poster"
+        tools:text="Test"/>
 
     <TextView
         android:id="@+id/filmName"
@@ -23,8 +35,8 @@
         app:layout_constraintEnd_toEndOf="@+id/detailBtn"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/poster"
-        tools:text="@string/sweeneyToddDesc" />
+        app:layout_constraintTop_toBottomOf="@+id/filmRate"
+        tools:text="Test" />
 
     <Button
         android:id="@+id/detailBtn"

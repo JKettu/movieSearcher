@@ -15,6 +15,7 @@ class FilmViewHolder(itemOfRecycler: View) : RecyclerView.ViewHolder(itemOfRecyc
     val filmName: TextView = itemOfRecycler.filmName
     val poster: ImageView = itemOfRecycler.poster
     val detailBtn: Button = itemOfRecycler.detailBtn
+    val filmRate: TextView = itemOfRecycler.filmRate
 
     fun bind(item: FilmItem, position: Int, listener: MainFilmListFragment.OnMainFragmentAction?) {
         itemView.setOnLongClickListener {
@@ -24,6 +25,7 @@ class FilmViewHolder(itemOfRecycler: View) : RecyclerView.ViewHolder(itemOfRecyc
             }
         }
         this.filmName.text = item.title
+        this.filmRate.text = item.rating
         loadImage(poster, item.posterPath)
         listener?.onRestoreMarkedFilmName(this.filmName, position)
         detailBtn.setOnClickListener {

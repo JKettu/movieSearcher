@@ -15,6 +15,7 @@ import retrofit2.Call
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.constants.NetworkConstants.POSTER_PREFIX
 import ru.kettu.moviesearcher.models.network.FilmListResponse
+import ru.kettu.moviesearcher.models.network.Genres
 import ru.kettu.moviesearcher.network.RetrofitApp
 
 fun TextView.setDefaultTextColor() {
@@ -73,4 +74,15 @@ fun FragmentManager.refreshOpenedFragment() {
             .attach(it)
             .commit()
     }
+}
+
+fun fillGenres(genresList: List<Genres>?, genreIds: List<Int>?): List<Genres> {
+    if (genresList == null || genresList.isEmpty()) {
+        val list = ArrayList<Genres>()
+        genreIds?.forEach { id ->
+            list.add(Genres(id, ""))
+        }
+        return list
+    }
+    return genresList
 }

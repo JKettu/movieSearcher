@@ -2,6 +2,7 @@ package ru.kettu.moviesearcher.controller
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.res.Resources
 import android.util.Log
 import android.view.View.*
 import android.widget.Toast
@@ -12,8 +13,13 @@ import retrofit2.Response
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.constants.NetworkConstants.POSTER_PREFIX
 import ru.kettu.moviesearcher.models.network.FilmDetails
+import ru.kettu.moviesearcher.models.network.Genres
 import ru.kettu.moviesearcher.network.RetrofitApp
 import ru.kettu.moviesearcher.view.fragment.FilmDetailsFragment
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 
 fun FilmDetailsFragment.setPosterRoundImgAnimation(verticalOffset: Int, currentOffset: Int): Int {
     val fragment = this
@@ -65,8 +71,12 @@ fun initFilmDetailLoading(filmId: Int, fragment: FilmDetailsFragment) {
         override fun onResponse(call: Call<FilmDetails>, response: Response<FilmDetails>) {
             val film = response.body()
             film?.let {
+                val releaseDate = film.releaseDate.substringBefore("-")
+                val title = "${film.title} ($releaseDate)"
                 fragment.filmDesc.text = film.overview
-                fragment.filmTitle.text = film.title
+                fragment.filmTitle.text = title
+                fragment.filmGenres.text = resources.convertGenresListToString(film.genres)
+                fragment.filmRating.text = film.voteAverage.toString()
                 loadImage(fragment.filmImg, POSTER_PREFIX + film.posterPath)
                 loadImage(fragment.filmBack, POSTER_PREFIX + film.posterPath)
             }
@@ -79,4 +89,14 @@ fun initFilmDetailLoading(filmId: Int, fragment: FilmDetailsFragment) {
             Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_LONG).show()
         }
     })
+}
+
+private fun Resources.convertGenresListToString (list: List<Genres>): String {
+    var genres = this.getString(R.string.genres)
+    list.forEachIndexed { index, elem ->
+        genres += elem.name
+        if (!list.lastIndex.equals(index))
+            genres += ", "
+    }
+    return genres
 }

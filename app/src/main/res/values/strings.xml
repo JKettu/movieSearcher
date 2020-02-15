@@ -20,6 +20,8 @@
     <string name="cancel">Отмена</string>
     <string name="favouritesFragmentName">Избранное</string>
     <string name="filmLoadingFailed">Не удалось загрузить список фильмов. Попробуйте позже.</string>
+    <string name="overview">Описание</string>
+    <string name="genres">Жанр: </string>
 
     <string name="mainActivityTitle">Список фильмов</string>
 </resources>
