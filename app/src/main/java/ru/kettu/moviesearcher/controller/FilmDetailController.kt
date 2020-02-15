@@ -11,14 +11,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.kettu.moviesearcher.R
+import ru.kettu.moviesearcher.constants.Constants.COMMA_AND_SPACE
+import ru.kettu.moviesearcher.constants.Constants.DASH
 import ru.kettu.moviesearcher.constants.NetworkConstants.POSTER_PREFIX
 import ru.kettu.moviesearcher.models.network.FilmDetails
 import ru.kettu.moviesearcher.models.network.Genres
 import ru.kettu.moviesearcher.network.RetrofitApp
 import ru.kettu.moviesearcher.view.fragment.FilmDetailsFragment
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 fun FilmDetailsFragment.setPosterRoundImgAnimation(verticalOffset: Int, currentOffset: Int): Int {
@@ -71,7 +70,7 @@ fun initFilmDetailLoading(filmId: Int, fragment: FilmDetailsFragment) {
         override fun onResponse(call: Call<FilmDetails>, response: Response<FilmDetails>) {
             val film = response.body()
             film?.let {
-                val releaseDate = film.releaseDate.substringBefore("-")
+                val releaseDate = film.releaseDate.substringBefore(DASH)
                 val title = "${film.title} ($releaseDate)"
                 fragment.filmDesc.text = film.overview
                 fragment.filmTitle.text = title
@@ -96,7 +95,7 @@ private fun Resources.convertGenresListToString (list: List<Genres>): String {
     list.forEachIndexed { index, elem ->
         genres += elem.name
         if (!list.lastIndex.equals(index))
-            genres += ", "
+            genres += COMMA_AND_SPACE
     }
     return genres
 }

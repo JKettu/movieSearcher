@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import retrofit2.Call
 import ru.kettu.moviesearcher.R
+import ru.kettu.moviesearcher.constants.Constants.EMPTY_STRING
 import ru.kettu.moviesearcher.constants.NetworkConstants.POSTER_PREFIX
 import ru.kettu.moviesearcher.models.network.FilmListResponse
 import ru.kettu.moviesearcher.models.network.Genres
@@ -80,7 +81,7 @@ fun fillGenres(genresList: List<Genres>?, genreIds: List<Int>?): List<Genres> {
     if (genresList == null || genresList.isEmpty()) {
         val list = ArrayList<Genres>()
         genreIds?.forEach { id ->
-            list.add(Genres(id, ""))
+            list.add(Genres(id, EMPTY_STRING))
         }
         return list
     }
