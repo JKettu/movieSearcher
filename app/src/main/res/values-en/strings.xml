@@ -20,17 +20,9 @@
     <string name="serviceDesc">Film\'s search service</string>
     <string name="cancel">Cancel</string>
     <string name="favouritesFragmentName">Favourites</string>
+    <string name="filmLoadingFailed">Movies loading failed. Try again later.</string>
+    <string name="overview">Overview</string>
+    <string name="genres">Genre: </string>
 
     <string name="mainActivityTitle">Film\'s list</string>
-    <string name="sweeneyToddFilm">Sweeney Todd: The Demon Barber of Fleet Street</string>
-    <string name="harryPotter1Film">Harry Potter and the Sorcerer\'s Stone</string>
-    <string name="dogsPurposeFilm">A Dog\'s Purpose</string>
-    <string name="ageOfAdalineFilm">The Age of Adaline</string>
-    <string name="theAvengersFilm">The Avengers</string>
-    <string name="morningGloryFilm">Morning Glory</string>
-    <string name="theLordOfTheRings1Film">The Lord of the Rings: The Fellowship of the Ring</string>
-    <string name="klausFilm">Klaus</string>
-    <string name="treasurePlanetFilm">Treasure Planet</string>
-    <string name="theNightmareBeforeChristmasFilm">The Nightmare Before Christmas</string>
-    <string name="cocoFilm">Coco</string>
 </resources>

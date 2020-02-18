@@ -2,14 +2,22 @@ package ru.kettu.moviesearcher.controller
 
 import android.app.Activity
 import android.content.res.Resources
+import android.text.TextUtils.isEmpty
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.bumptech.glide.Glide
+import retrofit2.Call
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.models.FilmInfo
-import ru.kettu.moviesearcher.models.item.FilmItem
-import java.util.*
+import ru.kettu.moviesearcher.constants.Constants.EMPTY_STRING
+import ru.kettu.moviesearcher.constants.NetworkConstants.POSTER_PREFIX
+import ru.kettu.moviesearcher.models.network.FilmListResponse
+import ru.kettu.moviesearcher.models.network.Genres
+import ru.kettu.moviesearcher.network.RetrofitApp
 
 fun TextView.setDefaultTextColor() {
     val colorAccent = resources.getColor(R.color.colorAccent)
@@ -21,62 +29,9 @@ fun TextView.setSelectedTextColor() {
     this.setTextColor(colorAccentDark)
 }
 
-fun initFilmItems(): ArrayList<FilmItem> {
-    return arrayListOf<FilmItem>(
-        FilmItem(R.drawable.harry_potter_1, R.string.harryPotter1Film),
-        FilmItem(R.drawable.sweeney_todd, R.string.sweeneyToddFilm),
-        FilmItem(R.drawable.dogs_purpose, R.string.dogsPurposeFilm),
-        FilmItem(R.drawable.age_of_adaline, R.string.ageOfAdalineFilm),
-        FilmItem(R.drawable.the_avengers, R.string.theAvengersFilm),
-        FilmItem(R.drawable.morning_glory, R.string.morningGloryFilm),
-        FilmItem(R.drawable.the_lord_of_the_rings1, R.string.theLordOfTheRings1Film),
-        FilmItem(R.drawable.treasure_planet, R.string.treasurePlanetFilm),
-        FilmItem(R.drawable.coco, R.string.cocoFilm),
-        FilmItem(R.drawable.klaus, R.string.klausFilm),
-        FilmItem(R.drawable.the_nightmare_before_christmas, R.string.theNightmareBeforeChristmasFilm)
-    )
-}
-
-fun Resources.getFilmInfoByFilmName(filmName: String?): FilmInfo? {
-    return when (filmName) {
-        getString(R.string.dogsPurposeFilm) ->
-            FilmInfo(R.string.dogsPurposeDesc, R.drawable.dogs_purpose)
-        getString(R.string.harryPotter1Film) ->
-            FilmInfo(R.string.harryPotterDesc, R.drawable.harry_potter_1)
-        getString(R.string.sweeneyToddFilm) ->
-            FilmInfo(R.string.sweeneyToddDesc, R.drawable.sweeney_todd)
-        getString(R.string.ageOfAdalineFilm) ->
-            FilmInfo(R.string.ageOfAdalineDesc, R.drawable.age_of_adaline)
-        getString(R.string.theAvengersFilm) ->
-            FilmInfo(R.string.theAvengersDesc, R.drawable.the_avengers)
-        getString(R.string.morningGloryFilm) ->
-            FilmInfo(R.string.morningGloryDesc, R.drawable.morning_glory)
-        getString(R.string.theLordOfTheRings1Film) ->
-            FilmInfo(R.string.theLordOfTheRings1Desc, R.drawable.the_lord_of_the_rings1)
-        getString(R.string.treasurePlanetFilm) ->
-            FilmInfo(R.string.treasurePlanetDesc, R.drawable.treasure_planet)
-        getString(R.string.cocoFilm) ->
-            FilmInfo(R.string.cocoDesc, R.drawable.coco)
-        getString(R.string.klausFilm) ->
-            FilmInfo(R.string.klausDesc, R.drawable.klaus)
-        getString(R.string.theNightmareBeforeChristmasFilm) ->
-            FilmInfo(
-                R.string.theNightmareBeforeChristmasDesc,
-                R.drawable.the_nightmare_before_christmas
-            )
-        else -> null
-    }
-}
-
-fun Resources.initNotInFavourites(allFilms: ArrayList<FilmItem>?,
-                                  films: TreeSet<FilmItem>?, notInFilms: TreeSet<FilmItem>) {
-    if (films == null) return
-    allFilms?.forEach { film ->
-        run {
-            if (!films.contains(FilmItem(film.filmPosterId, film.filmNameId)))
-                notInFilms.add(FilmItem(film.filmPosterId, film.filmNameId))
-        }
-    }
+fun getFilmsFromPage(resources: Resources, page: Int): Call<FilmListResponse>? {
+    val movieDbApi = RetrofitApp.theMovieDbApi
+    return movieDbApi?.getNowPlayingFilms(resources.configuration.locale.language, page)
 }
 
 fun onDayNightModeSwitch(mode: SwitchCompat, activity: Activity) {
@@ -86,4 +41,49 @@ fun onDayNightModeSwitch(mode: SwitchCompat, activity: Activity) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
     ActivityCompat.recreate(activity)
+}
+
+fun loadImage(imageView: ImageView, fullImagePath: String?) {
+    if (isEmpty(fullImagePath) || POSTER_PREFIX.equals(fullImagePath)) return
+    Glide.with(imageView.context)
+        .load(fullImagePath)
+        .centerCrop()
+        .placeholder(R.drawable.ic_launcher_foreground)
+        .into(imageView)
+}
+
+
+fun FragmentManager.loadFragmentWithoutBackStack(fragmentId: Int, fragment: Fragment, name: String) {
+    this.beginTransaction()
+        .replace(fragmentId, fragment, name)
+        .commit()
+}
+
+fun FragmentManager.loadFragmentWithBackStack(fragmentId: Int, fragment: Fragment, name: String) {
+    this.beginTransaction()
+        .replace(fragmentId, fragment, name)
+        .addToBackStack(name)
+        .commit()
+}
+
+fun FragmentManager.refreshOpenedFragment() {
+    val fragment = this.findFragmentById(R.id.fragmentContainer)
+    fragment?.let {
+        this
+            .beginTransaction()
+            .detach(it)
+            .attach(it)
+            .commit()
+    }
+}
+
+fun fillGenres(genresList: List<Genres>?, genreIds: List<Int>?): List<Genres> {
+    if (genresList == null || genresList.isEmpty()) {
+        val list = ArrayList<Genres>()
+        genreIds?.forEach { id ->
+            list.add(Genres(id, EMPTY_STRING))
+        }
+        return list
+    }
+    return genresList
 }
