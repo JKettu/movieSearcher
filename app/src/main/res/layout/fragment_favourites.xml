@@ -25,7 +25,7 @@
             tools:listitem="@layout/item_favourite" />
         <ProgressBar
                 android:id="@+id/circle_progress_bar"
-                style="@android:style/Widget.ProgressBar.Large"
+                style="@android:style/Widget.Material.Light.ProgressBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"

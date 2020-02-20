@@ -68,24 +68,32 @@ fun initFilmDetailLoading(filmId: Int, fragment: FilmDetailsFragment) {
     val call = movieDbApi?.getFilmDetails(filmId, resources.configuration.locale.language)
     call?.enqueue(object : Callback<FilmDetails> {
         override fun onResponse(call: Call<FilmDetails>, response: Response<FilmDetails>) {
-            val film = response.body()
-            film?.let {
-                val releaseDate = film.releaseDate.substringBefore(DASH)
-                val title = "${film.title} ($releaseDate)"
-                fragment.filmDesc.text = film.overview
-                fragment.filmTitle.text = title
-                fragment.filmGenres.text = resources.convertGenresListToString(film.genres)
-                fragment.filmRating.text = film.voteAverage.toString()
-                loadImage(fragment.filmImg, POSTER_PREFIX + film.posterPath)
-                loadImage(fragment.filmBack, POSTER_PREFIX + film.posterPath)
+            try {
+                val film = response.body()
+                film?.let {
+                    val releaseDate = film.releaseDate.substringBefore(DASH)
+                    val title = "${film.title} ($releaseDate)"
+                    fragment.filmDesc.text = film.overview
+                    fragment.filmTitle.text = title
+                    fragment.filmGenres.text = resources.convertGenresListToString(film.genres)
+                    fragment.filmRating.text = film.voteAverage.toString()
+                    loadImage(fragment.filmImg, POSTER_PREFIX + film.posterPath)
+                    loadImage(fragment.filmBack, POSTER_PREFIX + film.posterPath)
+                }
+                fragment.circle_progress_bar.visibility = INVISIBLE
+            } catch (exception: Throwable) {
+                Log.e("Details:loadFilm", exception.localizedMessage, exception)
             }
-            fragment.circle_progress_bar.visibility = INVISIBLE
         }
 
         override fun onFailure(call: Call<FilmDetails>, t: Throwable) {
-            Log.e("Details:loadFilm",t.localizedMessage, t)
-            fragment.circle_progress_bar.visibility = INVISIBLE
-            Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_LONG).show()
+            try {
+                Log.e("Details:loadFilm",t.localizedMessage, t)
+                fragment.circle_progress_bar.visibility = INVISIBLE
+                Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_SHORT).show()
+            } catch (exception: Throwable) {
+                Log.e("Details:loadFilm", exception.localizedMessage, exception)
+            }
         }
     })
 }

@@ -59,7 +59,7 @@ fun initFirstFavouritesLoading(fragment: FavouritesFragment, favourites: Set<Fil
     favouritesLoading(fragment, favourites)
 }
 
-private fun favouritesLoading(fragment: FavouritesFragment, favourites: Set<FilmItem>) {
+fun favouritesLoading(fragment: FavouritesFragment, favourites: Set<FilmItem>) {
     val resources = fragment.resources
     val movieDbApi = RetrofitApp.theMovieDbApi
     val loadedFavouritesAmount = fragment.favouritesLoaded.size
@@ -83,19 +83,10 @@ private fun initFavouritesRecyclerView(fragment: FavouritesFragment, context: Co
     fragment.recycleViewFav?.adapter =
         FavouritesAdapter(LayoutInflater.from(context), fragment.favouritesLoaded, fragment.listener)
     fragment.recycleViewFav?.layoutManager = layoutManager
-
-    fragment.recycleViewFav?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            if ((recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                    == recyclerView.size - 1
-                && fragment.favourites.size != recyclerView.size) {
-                favouritesLoading(fragment, fragment.favourites)
-            }
-        }
-    })
 }
 
 fun initFirstNotInFavouritesLoading(fragment: FavouritesFragment) {
+    if (fragment.isAddToFavLoadingInProcess) return
     if (fragment.filmsToAddRV.layoutManager == null)
         initNotInFavouritesRecyclerView(fragment, fragment.view?.context)
     if (fragment.notInFavourites.isNotEmpty()) {
@@ -106,6 +97,8 @@ fun initFirstNotInFavouritesLoading(fragment: FavouritesFragment) {
 }
 
 fun getNotInFavouritesList(fragment: FavouritesFragment, page: Int) {
+    if (fragment.isFavLoadingInProcess) return
+    fragment.isFavLoadingInProcess = true
     val call = getFilmsFromPage(fragment.resources, page)
     loadFilmList(fragment, call)
 }
@@ -122,21 +115,31 @@ private fun initNotInFavouritesRecyclerView(fragment: FavouritesFragment, contex
 private fun loadFilm(fragment: FavouritesFragment, call: Call<FilmDetails>?) {
     call?.enqueue(object: Callback<FilmDetails> {
         override fun onFailure(call: Call<FilmDetails>, t: Throwable) {
-            fragment.circle_progress_bar.visibility = INVISIBLE
-            Log.e("Favourites:loadFilm",t.localizedMessage, t)
-            Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_LONG).show()
+            try {
+                fragment.circle_progress_bar.visibility = INVISIBLE
+                Log.e("Favourites:loadFilm",t.localizedMessage, t)
+                Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_SHORT).show()
+            } catch (exception: Throwable) {
+                Log.e("Favourites:loadFilm", exception.localizedMessage, exception)
+            }
+            fragment.isFavLoadingInProcess = false
         }
 
         override fun onResponse(call: Call<FilmDetails>, response: Response<FilmDetails>) {
-            response.body()?.let { film ->
-                val newFav = FilmItem(film.id, film.title, film.overview, film.posterPath,
-                    film.voteAverage.toString(), film.genres, film.releaseDate)
-                fragment.favouritesLoaded.add(newFav)
-                fragment.recycleViewFav.adapter?.let {
-                    it.notifyItemInserted(it.itemCount)
+            try {
+                response.body()?.let { film ->
+                    val newFav = FilmItem(film.id, film.title, film.overview, film.posterPath,
+                        film.voteAverage.toString(), film.genres, film.releaseDate)
+                    fragment.favouritesLoaded.add(newFav)
+                    fragment.recycleViewFav.adapter?.let {
+                        it.notifyItemInserted(it.itemCount)
+                    }
                 }
+                fragment.circle_progress_bar.visibility = INVISIBLE
+            } catch (exception: Throwable) {
+                Log.e("Favourites:loadFilm", exception.localizedMessage, exception)
             }
-            fragment.circle_progress_bar.visibility = INVISIBLE
+            fragment.isFavLoadingInProcess = false
         }
     })
 }
@@ -144,16 +147,22 @@ private fun loadFilm(fragment: FavouritesFragment, call: Call<FilmDetails>?) {
 private fun loadFilmList(fragment: FavouritesFragment, call: Call<FilmListResponse>?) {
     call?.enqueue(object: Callback<FilmListResponse> {
         override fun onFailure(call: Call<FilmListResponse>, t: Throwable) {
-            fragment.circle_progress_bar.visibility = INVISIBLE
-            Log.e("Favourites:loadFilmList",t.localizedMessage, t)
-            Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_LONG).show()
+            try {
+                fragment.add_to_fav_progress_bar.visibility = INVISIBLE
+                Log.e("Favourites:loadFilmList",t.localizedMessage, t)
+                Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_SHORT).show()
+            } catch (exception: Throwable) {
+                Log.e("Favourites:loadFilmList", exception.localizedMessage, exception)
+            }
+            fragment.isFavLoadingInProcess = false
         }
 
         override fun onResponse(call: Call<FilmListResponse>, response: Response<FilmListResponse>) {
-            val films: List<FilmDetails>? = response.body()?.results
-            var itemsAddedAmount = 0
-            fragment.filmsToAddRV?.adapter?.let {
-                films?.forEach {film -> run {
+            try {
+                val films: List<FilmDetails>? = response.body()?.results
+                var itemsAddedAmount = 0
+                fragment.filmsToAddRV?.adapter?.let {
+                    films?.forEach { film ->
                         film.genres = fillGenres(film.genres, film.genreIds)
                         val currentFilm = FilmItem(film.id, film.title, film.overview, film.posterPath,
                             film.voteAverage.toString(), film.genres, film.releaseDate)
@@ -164,12 +173,15 @@ private fun loadFilmList(fragment: FavouritesFragment, call: Call<FilmListRespon
                         }
                     }
                 }
+                fragment.currentLoadedPage++
+                if (itemsAddedAmount < FAVOURITES_LOAD_AMOUNT) {
+                    getNotInFavouritesList(fragment, fragment.currentLoadedPage)
+                }
+                fragment.add_to_fav_progress_bar.visibility = INVISIBLE
+            } catch (exception: Throwable) {
+                Log.e("Favourites:loadFilmList", exception.localizedMessage, exception)
             }
-            fragment.currentLoadedPage++
-            if (itemsAddedAmount < FAVOURITES_LOAD_AMOUNT) {
-                getNotInFavouritesList(fragment, fragment.currentLoadedPage)
-            }
-            fragment.circle_progress_bar.visibility = INVISIBLE
+            fragment.isFavLoadingInProcess = false
         }
     })
 }

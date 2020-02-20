@@ -2,6 +2,7 @@ package ru.kettu.moviesearcher.view.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.view.View.VISIBLE
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,7 +25,6 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
     companion object {
         const val MAIN_FRAGMENT = "MAIN_FRAGMENT"
         const val LOADED_PAGE = "LOADED_PAGE"
-        const val FILM_INFO = "FILM_INFO"
         const val ALL_FILMS = "ALL_FILMS"
         const val FAVOURITES = "FAVOURITES"
         const val SELECTED_SPAN = "SELECTED_SPAN"
@@ -44,12 +44,9 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let {
             selectedSpan = it.getInt(SELECTED_SPAN)
-            val bundle = it.getBundle(FILM_INFO)
-            bundle?.let {
-                favourites = bundle.getSerializable(FAVOURITES) as LinkedHashSet<FilmItem>
-                filmItems = bundle.getSerializable(ALL_FILMS) as LinkedHashSet<FilmItem>
-                currentLoadedPage= bundle.getInt(LOADED_PAGE)
-            }
+            favourites = it.getSerializable(FAVOURITES) as LinkedHashSet<FilmItem>
+            filmItems = it.getSerializable(ALL_FILMS) as LinkedHashSet<FilmItem>
+            currentLoadedPage = it.getInt(LOADED_PAGE)
         }
 
         initRecycleView()
@@ -57,6 +54,7 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if ((recycleView?.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
                     == filmItems.size) {
+                    this@MainFilmListFragment.circle_progress_bar.visibility = VISIBLE
                     getAllFilmsList(this@MainFilmListFragment, currentLoadedPage + 1, recyclerView.layoutManager)
                 }
             }
@@ -69,11 +67,9 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
         selectedSpan?.let {
             outState.putInt(SELECTED_SPAN, selectedSpan!!)
         }
-        val bundle = Bundle()
-        bundle.putSerializable(FAVOURITES, favourites)
-        bundle.putSerializable(ALL_FILMS, filmItems)
-        bundle.putInt(LOADED_PAGE, currentLoadedPage)
-        outState.putBundle(FILM_INFO, bundle)
+        outState.putSerializable(FAVOURITES, favourites)
+        outState.putSerializable(ALL_FILMS, filmItems)
+        outState.putInt(LOADED_PAGE, currentLoadedPage)
     }
 
     interface OnMainFragmentAction {

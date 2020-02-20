@@ -16,7 +16,6 @@ import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.network.FilmDetails
 import ru.kettu.moviesearcher.models.network.FilmListResponse
-import ru.kettu.moviesearcher.models.network.Genres
 import ru.kettu.moviesearcher.network.RetrofitApp
 import ru.kettu.moviesearcher.view.fragment.MainFilmListFragment
 import ru.kettu.moviesearcher.view.recyclerview.adapter.FilmListAdapter
@@ -59,34 +58,48 @@ private fun loadFilmList(fragment: MainFilmListFragment, call: Call<FilmListResp
     val resources = fragment.resources
     call?.enqueue(object : Callback<FilmListResponse> {
         override fun onResponse(call: Call<FilmListResponse>, response: Response<FilmListResponse>) {
-            val films: List<FilmDetails>? = response.body()?.results
-            films?.forEach {
-                it.genres = fillGenres(it.genres, it.genreIds)
-                fragment.filmItems.add(FilmItem(it.id, it.title, it.overview, it.posterPath,
-                    it.voteAverage.toString(), it.genres, it.releaseDate))
-            }
-
-            films?.let {
-                if (fragment.recycleView?.adapter == null) {
-                    fragment.recycleView?.adapter =
-                        FilmListAdapter(LayoutInflater.from(currentView?.context), fragment.filmItems, fragment.listener, resources)
-                    fragment.recycleView?.layoutManager = layoutManager
-                } else {
-                    fragment.recycleView?.adapter?.let {
-                        it.notifyItemRangeInserted(it.itemCount + 1, films.size)
-                        fragment.currentLoadedPage = if (response.body()?.page == null) 0 else response.body()?.page as Int
+            try {
+                fragment.recycleView?.let {
+                    val films: List<FilmDetails>? = response.body()?.results
+                    films?.forEach {
+                        it.genres = fillGenres(it.genres, it.genreIds)
+                        fragment.filmItems.add(FilmItem(it.id, it.title, it.overview, it.posterPath,
+                            it.voteAverage.toString(), it.genres, it.releaseDate))
                     }
-                }
-            }
 
-            fragment.listener?.onItemsInitFinish(fragment.filmItems)
-            fragment.circle_progress_bar.visibility = INVISIBLE
+                    films?.let {
+                        if (fragment.recycleView?.adapter == null) {
+                            fragment.recycleView?.adapter =
+                                FilmListAdapter(LayoutInflater.from(currentView?.context), fragment.filmItems, fragment.listener, resources)
+                            fragment.recycleView?.layoutManager = layoutManager
+                        } else {
+                            fragment.recycleView?.adapter?.let {
+                                it.notifyItemRangeInserted(it.itemCount + 1, films.size)
+                                fragment.currentLoadedPage = if (response.body()?.page == null) 0 else response.body()?.page as Int
+                            }
+                        }
+                    }
+
+                    fragment.listener?.onItemsInitFinish(fragment.filmItems)
+                    fragment.circle_progress_bar.visibility = INVISIBLE
+                }
+            } catch (exception: Throwable) {
+                Log.e("Main:loadFilmList", exception.localizedMessage, exception)
+            }
         }
 
         override fun onFailure(call: Call<FilmListResponse>, t: Throwable) {
-            Log.e("Main:loadFilmList",t.localizedMessage, t)
-            fragment.circle_progress_bar.visibility = INVISIBLE
-            Toast.makeText(fragment.view?.context, R.string.filmLoadingFailed, Toast.LENGTH_LONG).show()
+            try {
+                fragment.circle_progress_bar.visibility = INVISIBLE
+                Toast.makeText(
+                    fragment.view?.context,
+                    R.string.filmLoadingFailed,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            catch (exception: Throwable) {
+                Log.e("Main:loadFilmList", exception.localizedMessage, exception)
+            }
         }
     })
 }
