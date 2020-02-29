@@ -22,6 +22,7 @@
     <string name="filmLoadingFailed">Не удалось загрузить список фильмов. Попробуйте позже.</string>
     <string name="overview">Описание</string>
     <string name="genres">Жанр: </string>
+    <string name="tryAgain">Повторить запрос</string>
 
     <string name="mainActivityTitle">Список фильмов</string>
 </resources>

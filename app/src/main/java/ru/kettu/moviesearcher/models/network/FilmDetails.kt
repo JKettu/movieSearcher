@@ -33,5 +33,5 @@ data class FilmDetails (@SerializedName(POPULARITY) var popularity: Double,
                         @SerializedName(OVERVIEW) var overview: String,
                         @SerializedName(RELEASE_DATE) var releaseDate: String,
                         @SerializedName(TAGLINE) var tagline: String,
-                        @SerializedName(PRODUCTION_COUNTRIES) var productionCountries: List<ProductionCountries>) {
+                        @SerializedName(PRODUCTION_COUNTRIES) var productionCountries: List<ProductionCountries>): LoaderResponse {
 }

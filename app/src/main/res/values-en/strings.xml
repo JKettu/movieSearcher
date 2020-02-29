@@ -23,6 +23,7 @@
     <string name="filmLoadingFailed">Movies loading failed. Try again later.</string>
     <string name="overview">Overview</string>
     <string name="genres">Genre: </string>
+    <string name="tryAgain">Try again</string>
 
     <string name="mainActivityTitle">Film\'s list</string>
 </resources>

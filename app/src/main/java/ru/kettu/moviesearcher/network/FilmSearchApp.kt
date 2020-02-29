@@ -4,7 +4,7 @@ import android.app.Application
 import ru.kettu.moviesearcher.network.api.TheMovieDbApi
 import ru.kettu.moviesearcher.network.client.RetrofitClient.getRetrofitClient
 
-object RetrofitApp: Application() {
+object FilmSearchApp: Application() {
 
     var theMovieDbApi: TheMovieDbApi? = null
 
