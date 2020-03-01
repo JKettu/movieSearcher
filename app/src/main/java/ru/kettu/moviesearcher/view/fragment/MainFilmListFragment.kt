@@ -59,7 +59,6 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
             val diffResult = DiffUtil.calculateDiff(callback)
             filmItems.addAll(newSet)
             diffResult.dispatchUpdatesTo(recyclerView.adapter as FilmListAdapter)
-            filmsLoading = false
             circle_progress_bar.visibility = INVISIBLE
         })
 
@@ -79,6 +78,7 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
                 SUCCESS -> filmsTryAgainImg.visibility = GONE
                 else -> filmsTryAgainImg.visibility = VISIBLE
             }
+            filmsLoading = false
         })
 
         filmsTryAgainImg.setOnClickListener {

@@ -76,22 +76,26 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
                 notInFavourites.addAll(it)
                 diffResult.dispatchUpdatesTo(NotInFavRecyclerView.adapter as AddToFavouritesAdapter)
                 notInFavIsLoading = false
+                add_to_fav_progress_bar.visibility = INVISIBLE
             }
-            add_to_fav_progress_bar.visibility = INVISIBLE
         })
 
         favouritesViewModel.notInFavInitLoadResult.observe(viewLifecycleOwner, Observer { initLoadResult ->
             when (initLoadResult) {
-                SUCCESS -> notInFavTryAgainImg.visibility = GONE
-                else -> notInFavTryAgainImg.visibility = VISIBLE
+                SUCCESS -> {
+                    notInFavTryAgainImg.visibility = GONE
+                }
+                else -> {
+                    notInFavTryAgainImg.visibility = VISIBLE
+                    add_to_fav_progress_bar.visibility = INVISIBLE
+                }
             }
         })
 
         notInFavTryAgainImg.setOnClickListener {
-            favouritesViewModel.onNotInFavouritesScroll(resources, view.context, currentLoadedPage,
-                add_to_fav_progress_bar)
-            it.visibility = GONE
             add_to_fav_progress_bar.visibility = VISIBLE
+            favouritesViewModel.onNotInFavouritesScroll(resources, view.context, currentLoadedPage)
+            it.visibility = GONE
         }
 
         if (activity is AppCompatActivity) {
@@ -136,12 +140,12 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
         val layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.columns), RecyclerView.VERTICAL, false)
         NotInFavRecyclerView.adapter = AddToFavouritesAdapter(LayoutInflater.from(context), notInFavourites, listener)
         NotInFavRecyclerView.layoutManager = layoutManager
-
+        add_to_fav_progress_bar.visibility = VISIBLE
         //first init
-        if (favouritesViewModel.notInFavourite.value == null) {
-            add_to_fav_progress_bar.visibility = VISIBLE
+        val value = favouritesViewModel.notInFavourite.value
+        if (value == null || value.isEmpty()) {
             favouritesViewModel.initNotInFavouritesLiveData()
-            favouritesViewModel.onNotInFavouritesScroll(resources, context, currentLoadedPage, add_to_fav_progress_bar)
+            favouritesViewModel.onNotInFavouritesScroll(resources, context, currentLoadedPage)
         }
 
         NotInFavRecyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -150,8 +154,7 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
                     == notInFavourites.size - 1 && !notInFavIsLoading) {
                     add_to_fav_progress_bar.visibility = VISIBLE
                     notInFavIsLoading = true
-                    favouritesViewModel.onNotInFavouritesScroll(resources, context,
-                        currentLoadedPage, add_to_fav_progress_bar)
+                    favouritesViewModel.onNotInFavouritesScroll(resources, context, currentLoadedPage)
                 }
             }
         })

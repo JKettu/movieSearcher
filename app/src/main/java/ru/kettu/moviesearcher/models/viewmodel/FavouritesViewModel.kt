@@ -81,13 +81,12 @@ class FavouritesViewModel: ViewModel() {
         }
     }
 
-    fun onNotInFavouritesScroll(resources: Resources, context: Context, currentLoadedPage: Int, progressBar: ProgressBar) {
+    fun onNotInFavouritesScroll(resources: Resources, context: Context, currentLoadedPage: Int) {
         val call = theMovieDb?.getNowPlayingFilms(resources.configuration.locale.language, currentLoadedPage)
         call?.let {
             TheMovieDbLoader.loadFilmSet(call as Call<LoaderResponse>, object: Loader.LoaderCallback {
                 override fun onFailed(errorIntId: Int) {
                     Toast.makeText(context, errorIntId, Toast.LENGTH_LONG).show()
-                    progressBar.visibility = INVISIBLE
                     notInFavInitLoadResultLiveData.postValue(FAILED)
                 }
 
@@ -101,7 +100,7 @@ class FavouritesViewModel: ViewModel() {
                     }
                     (notInFavouriteLiveData.value as LinkedHashSet<FilmItem>).addAll(newList)
                     notInFavouriteLiveData.postValue(notInFavouriteLiveData.value)
-                    notInFavInitLoadResultLiveData.postValue(SUCCESS)
+                    notInFavInitLoadResultLiveData.value = SUCCESS
                 }
             })
         }
