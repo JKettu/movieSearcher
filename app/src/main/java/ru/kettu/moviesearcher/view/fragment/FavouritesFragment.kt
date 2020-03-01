@@ -17,15 +17,10 @@ import ru.kettu.moviesearcher.constants.FilmItemDiffUtilCallback
 import ru.kettu.moviesearcher.models.enum.LoadResult.SUCCESS
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.viewmodel.FavouritesViewModel
-import ru.kettu.moviesearcher.models.viewmodel.MainFilmListViewModel
 import ru.kettu.moviesearcher.view.recyclerview.adapter.AddToFavouritesAdapter
 import ru.kettu.moviesearcher.view.recyclerview.adapter.FavouritesAdapter
 
 class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
-
-    private val filmListViewModel by lazy {
-        ViewModelProvider(this.activity!!).get(MainFilmListViewModel::class.java)
-    }
 
     private val favouritesViewModel by lazy {
         ViewModelProvider(this.activity!!).get(FavouritesViewModel::class.java)
@@ -73,21 +68,16 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
         })
 
         favouritesViewModel.notInFavourite.observe(viewLifecycleOwner, Observer {
-            currentLoadedPage++
-            val callback = FilmItemDiffUtilCallback((NotInFavRecyclerView.adapter as AddToFavouritesAdapter).addItems, it)
-            val diffResult = DiffUtil.calculateDiff(callback)
-            notInFavourites.clear()
-            notInFavourites.addAll(it)
-            diffResult.dispatchUpdatesTo(NotInFavRecyclerView.adapter as AddToFavouritesAdapter)
-            add_to_fav_progress_bar.visibility = INVISIBLE
-            notInFavIsLoading = false
-        })
-
-        favouritesViewModel.favInitLoadResult.observe(viewLifecycleOwner, Observer { initLoadResult ->
-            when (initLoadResult) {
-                SUCCESS -> favTryAgainImg.visibility = INVISIBLE
-                else -> favTryAgainImg.visibility = VISIBLE
+            if (it.isNotEmpty() && SUCCESS.equals(favouritesViewModel.notInFavInitLoadResult.value)) {
+                currentLoadedPage++
+                val callback = FilmItemDiffUtilCallback((NotInFavRecyclerView.adapter as AddToFavouritesAdapter).addItems, it)
+                val diffResult = DiffUtil.calculateDiff(callback)
+                notInFavourites.clear()
+                notInFavourites.addAll(it)
+                diffResult.dispatchUpdatesTo(NotInFavRecyclerView.adapter as AddToFavouritesAdapter)
+                notInFavIsLoading = false
             }
+            add_to_fav_progress_bar.visibility = INVISIBLE
         })
 
         favouritesViewModel.notInFavInitLoadResult.observe(viewLifecycleOwner, Observer { initLoadResult ->
@@ -96,13 +86,6 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
                 else -> notInFavTryAgainImg.visibility = VISIBLE
             }
         })
-
-        favTryAgainImg.setOnClickListener {
-            favouritesViewModel.loadFavouritesList(favourites, resources, view.context, circle_progress_bar)
-            it.visibility = GONE
-            circle_progress_bar.visibility = VISIBLE
-
-        }
 
         notInFavTryAgainImg.setOnClickListener {
             favouritesViewModel.onNotInFavouritesScroll(resources, view.context, currentLoadedPage,
@@ -116,18 +99,6 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
             toolbar?.title = (getString(R.string.favouritesFragmentName))
         }
         listener?.onFragmentCreatedInitToolbar(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        filmListViewModel.favourites.value?.let { fav ->
-            if (SUCCESS.equals(favouritesViewModel.favInitLoadResult)) {
-                fav.clear()
-                fav.addAll(favourites)
-            } else {
-                fav.addAll(favourites)
-            }
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -150,8 +121,8 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
         circle_progress_bar.visibility = VISIBLE
         //first init based on received favourites list from main screen
         if (favourites.isEmpty()) {
-            filmListViewModel.favourites.value?.let {
-                favourites.addAll(filmListViewModel.favourites.value as LinkedHashSet<FilmItem>)
+            favouritesViewModel.favourites.value?.let {
+                favourites.addAll(favouritesViewModel.favourites.value as LinkedHashSet<FilmItem>)
             }
             favouritesViewModel.initFavouritesLoadedLiveData(favourites)
         } else

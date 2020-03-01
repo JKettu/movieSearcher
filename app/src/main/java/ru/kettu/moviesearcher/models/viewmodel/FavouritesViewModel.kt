@@ -19,21 +19,21 @@ import ru.kettu.moviesearcher.network.interactor.Loader
 import ru.kettu.moviesearcher.network.interactor.TheMovieDbLoader
 
 class FavouritesViewModel: ViewModel() {
+    private val favouritesLiveData = MutableLiveData<LinkedHashSet<FilmItem>>()
     private val notInFavouriteLiveData = MutableLiveData<LinkedHashSet<FilmItem>>()
     private val favouritesLoadedLiveData = MutableLiveData<LinkedHashSet<FilmItem>>()
-    private val favInitLoadResultLiveData = MutableLiveData<LoadResult>()
     private val notInFavInitLoadResultLiveData = MutableLiveData<LoadResult>()
 
     private val theMovieDb = FilmSearchApp.theMovieDbApi
+
+    val favourites: LiveData<LinkedHashSet<FilmItem>>
+        get() = favouritesLiveData
 
     val notInFavourite: LiveData<LinkedHashSet<FilmItem>>
         get() = notInFavouriteLiveData
 
     val favouritesLoaded: LiveData<LinkedHashSet<FilmItem>>
         get() = favouritesLoadedLiveData
-
-    val favInitLoadResult: LiveData<LoadResult>
-        get() = favInitLoadResultLiveData
 
     val notInFavInitLoadResult: LiveData<LoadResult>
         get() = notInFavInitLoadResultLiveData
@@ -47,6 +47,7 @@ class FavouritesViewModel: ViewModel() {
     }
 
     fun initNotInFavouritesLiveData() {
+        notInFavInitLoadResultLiveData.value = SUCCESS
         if (notInFavouriteLiveData.value == null) {
             notInFavouriteLiveData.value = LinkedHashSet()
         }
@@ -65,10 +66,6 @@ class FavouritesViewModel: ViewModel() {
                 override fun onFailed(errorIntId: Int) {
                     Toast.makeText(context, errorIntId, Toast.LENGTH_LONG).show()
                     progressBar?.visibility = INVISIBLE
-                    favouritesLoadedLiveData.value?.let { loadedFavs ->
-                        if (loadedFavs.isEmpty())
-                            favInitLoadResultLiveData.postValue(FAILED)
-                    }
                 }
 
                 override fun onSucceed(item: LinkedHashSet<FilmItem>) {
@@ -79,8 +76,6 @@ class FavouritesViewModel: ViewModel() {
                         notInFavs.removeAll(item)
                         notInFavouriteLiveData.postValue(notInFavouriteLiveData.value)
                     }
-                    progressBar?.visibility = INVISIBLE
-                    favInitLoadResultLiveData.postValue(SUCCESS)
                 }
             })
         }
@@ -93,8 +88,7 @@ class FavouritesViewModel: ViewModel() {
                 override fun onFailed(errorIntId: Int) {
                     Toast.makeText(context, errorIntId, Toast.LENGTH_LONG).show()
                     progressBar.visibility = INVISIBLE
-                    if (currentLoadedPage == 1)
-                        notInFavInitLoadResultLiveData.postValue(FAILED)
+                    notInFavInitLoadResultLiveData.postValue(FAILED)
                 }
 
                 override fun onSucceed(item: LinkedHashSet<FilmItem>) {
@@ -107,7 +101,6 @@ class FavouritesViewModel: ViewModel() {
                     }
                     (notInFavouriteLiveData.value as LinkedHashSet<FilmItem>).addAll(newList)
                     notInFavouriteLiveData.postValue(notInFavouriteLiveData.value)
-                    progressBar.visibility = INVISIBLE
                     notInFavInitLoadResultLiveData.postValue(SUCCESS)
                 }
             })
@@ -123,5 +116,21 @@ class FavouritesViewModel: ViewModel() {
         notInFavouriteLiveData.postValue(notInFavouriteLiveData.value)
         favouritesLoadedLiveData.value?.remove(film)
         favouritesLoadedLiveData.postValue(favouritesLoadedLiveData.value)
+    }
+
+    fun onFilmItemLongPress(item: FilmItem, isDeleted: Boolean) {
+        if (favouritesLiveData.value == null) {
+            favouritesLiveData.value = LinkedHashSet()
+        }
+        if (isDeleted) {
+            favouritesLiveData.value?.let {
+                it.remove(item)
+            }
+        } else {
+            favouritesLiveData.value?.let {
+                it.add(item)
+            }
+        }
+        favouritesLiveData.postValue(favouritesLiveData.value)
     }
 }

@@ -4,8 +4,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator.ofFloat
 import android.os.Bundle
 import android.view.View
-import android.view.View.INVISIBLE
-import android.view.View.TRANSLATION_X
+import android.view.View.*
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -16,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_film_detail.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.constants.Constants
 import ru.kettu.moviesearcher.controller.loadImage
+import ru.kettu.moviesearcher.models.enum.LoadResult.SUCCESS
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.viewmodel.FilmDetailsViewModel
 
@@ -79,6 +79,29 @@ class FilmDetailsFragment: Fragment(R.layout.fragment_film_detail) {
             }
             circle_progress_bar.visibility = INVISIBLE
         })
+
+        detailsViewModel.detailsLoadResult.observe(viewLifecycleOwner, Observer { loadResult ->
+            when (loadResult) {
+                SUCCESS -> {
+                    detailsTryAgainImg.visibility = GONE
+                    reloadConstraint.visibility = GONE
+                    circle_progress_bar.visibility = INVISIBLE
+                }
+                else -> {
+                    detailsTryAgainImg.visibility = VISIBLE
+                    reloadConstraint.visibility = VISIBLE
+                    circle_progress_bar.visibility = INVISIBLE
+                    filmImg.setImageDrawable(resources.getDrawable(R.drawable.unknown))
+                    filmBack.setImageDrawable(resources.getDrawable(R.drawable.unknown))
+                }
+            }
+        })
+
+        detailsTryAgainImg.setOnClickListener {
+            detailsTryAgainImg.visibility = GONE
+            circle_progress_bar.visibility = VISIBLE
+            detailsViewModel.loadFilm(resources, filmInfo.id, view.context)
+        }
     }
 
     private fun setPosterRoundImgAnimation(verticalOffset: Int, currentOffset: Int,

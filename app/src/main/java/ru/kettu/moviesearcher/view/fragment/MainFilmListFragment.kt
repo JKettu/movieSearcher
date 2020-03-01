@@ -2,8 +2,7 @@ package ru.kettu.moviesearcher.view.fragment
 
 import android.os.Bundle
 import android.view.View
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.constants.FilmItemDiffUtilCallback
+import ru.kettu.moviesearcher.models.enum.LoadResult.SUCCESS
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.viewmodel.MainFilmListViewModel
 import ru.kettu.moviesearcher.view.recyclerview.adapter.FilmListAdapter
@@ -44,6 +44,8 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
             filmsLoading = it.getBoolean(FILMS_LOADING)
         }
 
+        filmsTryAgainImg.visibility = GONE
+
         filmListViewModel.initRecycleView(recyclerView, filmItems, view.context,
             resources, this.listener as OnFragmentAction)
 
@@ -71,6 +73,20 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
                 }
             }
         })
+
+        filmListViewModel.filmsInitLoadResult.observe(viewLifecycleOwner, Observer { loadResult ->
+            when (loadResult) {
+                SUCCESS -> filmsTryAgainImg.visibility = GONE
+                else -> filmsTryAgainImg.visibility = VISIBLE
+            }
+        })
+
+        filmsTryAgainImg.setOnClickListener {
+            filmsTryAgainImg.visibility = GONE
+            circle_progress_bar.visibility = VISIBLE
+            filmListViewModel.onFilmListScroll(resources, view.context, currentLoadedPage, circle_progress_bar)
+        }
+
         listener?.onFragmentCreatedInitToolbar(this)
     }
 

@@ -15,6 +15,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -88,6 +89,12 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
             }
             main_swipe_refresh.isRefreshing = false
         }
+
+        filmListViewModel.additionWasCanceled.observe(this, Observer { wasCanceled ->
+            filmListViewModel.lastAddedToFavourite.value?.let { item ->
+                favouritesViewModel.onFilmItemLongPress(item, wasCanceled)
+            }
+        })
     }
 
     private fun initToolbar() {
@@ -219,7 +226,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
     }
 
     override fun onAddToFavourites(item: FilmItem) {
-        filmListViewModel.onFilmItemLongPress(resources, fragmentContainer, item)
+        filmListViewModel.setLastAddedFavourite(resources, fragmentContainer, item)
     }
 
     override fun onDetailsBtnPressed(filmName: TextView, item: FilmItem, layoutPosition: Int) {

@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import ru.kettu.moviesearcher.R
+import ru.kettu.moviesearcher.models.enum.LoadResult
+import ru.kettu.moviesearcher.models.enum.LoadResult.FAILED
+import ru.kettu.moviesearcher.models.enum.LoadResult.SUCCESS
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.network.LoaderResponse
 import ru.kettu.moviesearcher.network.FilmSearchApp
@@ -29,23 +32,27 @@ import ru.kettu.moviesearcher.view.recyclerview.adapter.FilmListAdapter
 
 class MainFilmListViewModel : ViewModel() {
     private val allFilmsLiveData = MutableLiveData<LinkedHashSet<FilmItem>>()
-    private val favouritesLiveData = MutableLiveData<LinkedHashSet<FilmItem>>()
     private val lastAddedToFavouriteLiveData = MutableLiveData<FilmItem>()
+    private val additionWasCanceledLiveData = MutableLiveData<Boolean>()
     private val selectedFilmItemPositionLivaData = MutableLiveData<Int>()
+    private val filmsInitLoadResultLiveData = MutableLiveData<LoadResult>()
 
     private val theMovieDb = FilmSearchApp.theMovieDbApi
 
     val allFilms: LiveData<LinkedHashSet<FilmItem>>
         get() = allFilmsLiveData
 
-    val favourites: LiveData<LinkedHashSet<FilmItem>>
-        get() = favouritesLiveData
-
     val lastAddedToFavourite: LiveData<FilmItem>
         get() = lastAddedToFavouriteLiveData
 
+    val additionWasCanceled: LiveData<Boolean>
+        get() = additionWasCanceledLiveData
+
     val selectedFilmItemPosition: LiveData<Int>
         get() = selectedFilmItemPositionLivaData
+
+    val filmsInitLoadResult: LiveData<LoadResult>
+        get() = filmsInitLoadResultLiveData
 
     fun initRecycleView(recyclerView: RecyclerView, filmItem: LinkedHashSet<FilmItem>, context: Context,
                         resources: Resources, listener: OnFragmentAction) {
@@ -65,6 +72,13 @@ class MainFilmListViewModel : ViewModel() {
                 override fun onFailed(errorIntId: Int) {
                     Toast.makeText(context, errorIntId, Toast.LENGTH_LONG).show()
                     progressBar.visibility = INVISIBLE
+                    if (allFilms.value == null)
+                        filmsInitLoadResultLiveData.postValue(FAILED)
+                    allFilms.value?.let { films ->
+                        if (films.isEmpty()) {
+                            filmsInitLoadResultLiveData.postValue(FAILED)
+                        }
+                    }
                 }
 
                 override fun onSucceed(item: LinkedHashSet<FilmItem>) {
@@ -74,7 +88,7 @@ class MainFilmListViewModel : ViewModel() {
                         (allFilmsLiveData.value as LinkedHashSet<FilmItem>).addAll(item)
                         allFilmsLiveData.postValue(allFilmsLiveData.value)
                     }
-                    progressBar.visibility = INVISIBLE
+                    filmsInitLoadResultLiveData.postValue(SUCCESS)
                 }
             })
         }
@@ -90,19 +104,13 @@ class MainFilmListViewModel : ViewModel() {
         selectedFilmItemPositionLivaData.value = layoutPosition
     }
 
-    fun onFilmItemLongPress(resources: Resources, view: View, item: FilmItem) {
-        if (favouritesLiveData.value == null) {
-            favouritesLiveData.value = LinkedHashSet()
-            (favouritesLiveData.value as LinkedHashSet).add(item)
-        }
-        else (favouritesLiveData.value as LinkedHashSet).add(item)
+    fun setLastAddedFavourite(resources: Resources, view: View, item: FilmItem) {
         lastAddedToFavouriteLiveData.value = item
+        additionWasCanceledLiveData.postValue(false)
         val snackbar = Snackbar.make(view, R.string.addToFavourite, Snackbar.LENGTH_LONG)
             .setAction(R.string.cancel) {
                 run {
-                    lastAddedToFavouriteLiveData?.let {
-                        favouritesLiveData.value?.remove(lastAddedToFavourite.value as FilmItem)
-                    }
+                    additionWasCanceledLiveData.postValue(true)
                 }
             }
         snackbar.view.setBackgroundColor(resources.getColor(R.color.colorMenuBase))
