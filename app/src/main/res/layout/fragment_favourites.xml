@@ -1,43 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragmentFavourites"
-    style="@style/backgroundPanelStyle"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:textColor="@color/colorAccent">
+    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/fragmentFavourites"
+        style="@style/backgroundPanelStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="true"
-        android:paddingBottom="50dp">
+        android:textColor="@color/colorAccent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleViewFav"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_favourite" />
-        <ProgressBar
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="true"
+            android:paddingBottom="50dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycleViewFav"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/item_favourite" />
+
+            <ProgressBar
                 android:id="@+id/circle_progress_bar"
-                style="@android:style/Widget.Material.Light.ProgressBar.Small"
+                style="@android:style/Widget.Material.ProgressBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@null"
                 android:max="100"
                 android:rotation="-90"
-                android:visibility="visible"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include layout="@layout/content_add_favorites" />
+        <include layout="@layout/content_add_favorites" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

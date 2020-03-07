@@ -9,6 +9,6 @@ import ru.kettu.moviesearcher.constants.QueryParamsConstants.TOTAL_RESULTS
 data class FilmListResponse (@SerializedName(PAGE) var page: Int,
                              @SerializedName(TOTAL_RESULTS) var totalResults: Int,
                              @SerializedName(TOTAL_PAGES) var totalPages: Int,
-                             @SerializedName(RESULTS) var results: List<FilmDetails>) {
+                             @SerializedName(RESULTS) var results: List<FilmDetails>): LoaderResponse {
 
 }

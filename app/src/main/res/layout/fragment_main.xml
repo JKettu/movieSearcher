@@ -3,32 +3,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragmentMain"
+    android:background="@color/colorPrimaryLight"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:showIn="@layout/activity_main">
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/filmListTextView"
+        style="@style/filmNameStyle"
+        android:layout_width="0dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@null"
+        android:text="@string/filmList"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleView"
+        android:id="@+id/recyclerView"
         style="@style/backgroundPanelStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filmListTextView"
         tools:listitem="@layout/item_film" />
 
     <ProgressBar
-            android:id="@+id/circle_progress_bar"
-            style="@android:style/Widget.Material.Light.ProgressBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@null"
-            android:max="100"
-            android:rotation="-90"
-            android:visibility="visible"/>
+        android:id="@+id/circle_progress_bar"
+        style="@android:style/Widget.Material.ProgressBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:max="100"
+        android:rotation="-90"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/filmsTryAgainImg"
+        style="@style/btnStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/reload" />
 </androidx.constraintlayout.widget.ConstraintLayout>
