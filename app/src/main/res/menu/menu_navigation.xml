@@ -7,7 +7,7 @@
     tools:showIn="navigationView">
 
     <group android:checkableBehavior="single">
-        <group android:id="@+id/firstGroup">
+        <group android:checkableBehavior="single" android:id="@+id/firstGroup">
             <item
                 android:id="@+id/mainScreen"
                 android:icon="@drawable/home"
@@ -17,7 +17,7 @@
                 android:icon="@drawable/favourite"
                 android:title="@string/favouritesScreen" />
         </group>
-        <group android:id="@+id/secondGroup">
+        <group android:checkableBehavior="single" android:id="@+id/secondGroup">
             <item
                 android:id="@+id/mode"
                 android:icon="@drawable/night_mode"

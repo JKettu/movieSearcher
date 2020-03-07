@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.kettu.moviesearcher">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -10,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
+            android:name="ru.kettu.moviesearcher.view.activity.MainActivity"
             android:configChanges="colorMode|uiMode"
             android:forceDarkAllowed="true"
             android:label="@string/app_name">

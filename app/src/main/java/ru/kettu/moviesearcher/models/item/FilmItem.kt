@@ -1,21 +1,14 @@
 package ru.kettu.moviesearcher.models.item
 
+import ru.kettu.moviesearcher.constants.NetworkConstants.POSTER_PREFIX
+import ru.kettu.moviesearcher.models.network.Genres
 import java.io.Serializable
 
-data class FilmItem (val filmPosterId: Int, val filmNameId: Int): Serializable, Comparable<FilmItem> {
+data class FilmItem (val id: Int, val title: String,
+                     val description: String, var posterPath: String?,
+                     val rating: String, val genres: List<Genres>?, val releaseDate: String): Serializable {
 
-    override fun equals(other: Any?): Boolean {
-        if (other == null || other !is FilmItem) return false
-        return this.filmNameId.equals(other.filmNameId)
-    }
-
-    override fun hashCode(): Int {
-        var hash = 37
-        hash = hash * 17 + this.filmNameId.hashCode()
-        return hash
-    }
-
-    override fun compareTo(other: FilmItem): Int {
-        return if(this.filmNameId > other.filmNameId) 1 else if (this.filmNameId < other.filmNameId) -1 else 0
+    init {
+        this.posterPath = POSTER_PREFIX + this.posterPath
     }
 }
