@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.*
 import kotlinx.android.synthetic.main.content_add_favorites.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.constants.FilmItemDiffUtilCallback
-import ru.kettu.moviesearcher.models.enum.LoadResult.SUCCESS
+import ru.kettu.moviesearcher.models.FilmItemDiffUtilCallback
+import ru.kettu.moviesearcher.models.enums.LoadResult.SUCCESS
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.viewmodel.FavouritesViewModel
 import ru.kettu.moviesearcher.view.recyclerview.adapter.AddToFavouritesAdapter
@@ -58,7 +58,11 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
         notInFavouritesRecyclerViewInit(view.context)
 
         favouritesViewModel.favouritesLoaded.observe(viewLifecycleOwner, Observer {
-            val callback = FilmItemDiffUtilCallback((recycleViewFav.adapter as FavouritesAdapter).items, it)
+            val callback =
+                FilmItemDiffUtilCallback(
+                    (recycleViewFav.adapter as FavouritesAdapter).items,
+                    it
+                )
             val duffResult = DiffUtil.calculateDiff(callback)
             favourites.clear()
             favourites.addAll(it)
@@ -70,7 +74,11 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
         favouritesViewModel.notInFavourite.observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty() && SUCCESS.equals(favouritesViewModel.notInFavInitLoadResult.value)) {
                 currentLoadedPage++
-                val callback = FilmItemDiffUtilCallback((NotInFavRecyclerView.adapter as AddToFavouritesAdapter).addItems, it)
+                val callback =
+                    FilmItemDiffUtilCallback(
+                        (NotInFavRecyclerView.adapter as AddToFavouritesAdapter).addItems,
+                        it
+                    )
                 val diffResult = DiffUtil.calculateDiff(callback)
                 notInFavourites.clear()
                 notInFavourites.addAll(it)

@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_main.*
 import ru.kettu.moviesearcher.R
-import ru.kettu.moviesearcher.constants.FilmItemDiffUtilCallback
-import ru.kettu.moviesearcher.models.enum.LoadResult.SUCCESS
+import ru.kettu.moviesearcher.models.FilmItemDiffUtilCallback
+import ru.kettu.moviesearcher.models.enums.LoadResult.SUCCESS
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.viewmodel.MainFilmListViewModel
 import ru.kettu.moviesearcher.view.recyclerview.adapter.FilmListAdapter
@@ -55,7 +55,11 @@ class MainFilmListFragment: Fragment(R.layout.fragment_main) {
         filmListViewModel.allFilms.observe(viewLifecycleOwner, Observer<LinkedHashSet<FilmItem>> {
             currentLoadedPage++
             val newSet = filmListViewModel.allFilms.value as LinkedHashSet<FilmItem>
-            val callback = FilmItemDiffUtilCallback(filmItems, newSet)
+            val callback =
+                FilmItemDiffUtilCallback(
+                    filmItems,
+                    newSet
+                )
             val diffResult = DiffUtil.calculateDiff(callback)
             filmItems.addAll(newSet)
             diffResult.dispatchUpdatesTo(recyclerView.adapter as FilmListAdapter)

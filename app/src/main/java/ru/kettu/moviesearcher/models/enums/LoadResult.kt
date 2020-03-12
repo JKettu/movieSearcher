@@ -1,4 +1,4 @@
-package ru.kettu.moviesearcher.models.enum
+package ru.kettu.moviesearcher.models.enums
 
 enum class LoadResult {
     FAILED, SUCCESS

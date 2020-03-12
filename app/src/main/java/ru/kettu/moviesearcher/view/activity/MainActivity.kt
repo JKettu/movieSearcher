@@ -25,7 +25,9 @@ import ru.kettu.moviesearcher.controller.loadFragmentWithoutBackStack
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.viewmodel.FavouritesViewModel
 import ru.kettu.moviesearcher.models.viewmodel.MainFilmListViewModel
-import ru.kettu.moviesearcher.network.FilmSearchApp
+import ru.kettu.moviesearcher.FilmSearchApp
+import ru.kettu.moviesearcher.FilmSearchApp.destroyMovieDatabase
+import ru.kettu.moviesearcher.FilmSearchApp.initMovieDatabase
 import ru.kettu.moviesearcher.view.fragment.FavouritesFragment
 import ru.kettu.moviesearcher.view.fragment.FavouritesFragment.Companion.FAVOURITES_FRAGMENT
 import ru.kettu.moviesearcher.view.fragment.FavouritesFragment.OnFavouritesFragmentAction
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initMovieDatabase(applicationContext)
         setContentView(R.layout.activity_main)
 
         if (FilmSearchApp.theMovieDbApi == null) {
@@ -163,6 +166,11 @@ class MainActivity : AppCompatActivity(), OnNavigationItemSelectedListener,
         bundle.putSerializable(FAVOURITES, favourites)
         bundle.putString(CURRENT_FRAGMENT_NAME, currentFragmentName)
         outState.putBundle(FILM_INFO, bundle)
+    }
+
+    override fun onDestroy() {
+        destroyMovieDatabase()
+        super.onDestroy()
     }
 
     override fun onSupportNavigateUp(): Boolean {

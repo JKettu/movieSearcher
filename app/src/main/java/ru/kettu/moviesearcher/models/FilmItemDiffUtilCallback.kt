@@ -1,4 +1,4 @@
-package ru.kettu.moviesearcher.constants
+package ru.kettu.moviesearcher.models
 
 import androidx.recyclerview.widget.DiffUtil
 import ru.kettu.moviesearcher.models.item.FilmItem

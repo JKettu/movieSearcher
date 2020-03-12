@@ -9,13 +9,13 @@ import androidx.lifecycle.ViewModel
 import retrofit2.Call
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.constants.Constants
-import ru.kettu.moviesearcher.models.enum.LoadResult
-import ru.kettu.moviesearcher.models.enum.LoadResult.FAILED
-import ru.kettu.moviesearcher.models.enum.LoadResult.SUCCESS
+import ru.kettu.moviesearcher.models.enums.LoadResult
+import ru.kettu.moviesearcher.models.enums.LoadResult.FAILED
+import ru.kettu.moviesearcher.models.enums.LoadResult.SUCCESS
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.network.Genres
 import ru.kettu.moviesearcher.models.network.LoaderResponse
-import ru.kettu.moviesearcher.network.FilmSearchApp
+import ru.kettu.moviesearcher.FilmSearchApp
 import ru.kettu.moviesearcher.network.interactor.Loader
 import ru.kettu.moviesearcher.network.interactor.TheMovieDbLoader
 

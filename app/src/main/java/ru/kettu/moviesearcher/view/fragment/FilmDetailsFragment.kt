@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_film_detail.*
 import ru.kettu.moviesearcher.R
 import ru.kettu.moviesearcher.constants.Constants
 import ru.kettu.moviesearcher.controller.loadImage
-import ru.kettu.moviesearcher.models.enum.LoadResult.SUCCESS
+import ru.kettu.moviesearcher.models.enums.LoadResult.SUCCESS
 import ru.kettu.moviesearcher.models.item.FilmItem
 import ru.kettu.moviesearcher.models.viewmodel.FilmDetailsViewModel
 
